@@ -25,7 +25,6 @@ export default function Navbar() {
   useEffect(() => {
     const onScroll = () => {
       setScrolled(window.scrollY > 40)
-      // Scroll-spy: find the section currently in view.
       let current = 'accueil'
       for (const link of LINKS) {
         const el = document.getElementById(link.id)
@@ -43,23 +42,29 @@ export default function Navbar() {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
   }
 
+  const onHero = active === 'accueil' && !scrolled
+
   return (
     <header
       className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? 'border-b border-line bg-surface/80 backdrop-blur-md dark:border-line-dark dark:bg-surface-dark/80'
-          : 'bg-transparent'
+        onHero
+          ? 'bg-transparent'
+          : scrolled
+            ? 'border-b border-line bg-surface/80 backdrop-blur-md dark:border-line-dark dark:bg-surface-dark/80'
+            : 'bg-transparent'
       }`}
     >
       <nav
         aria-label="Navigation principale"
-        className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4"
+        className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 sm:px-10 lg:px-14"
       >
         <button
           onClick={() => go('accueil')}
-          className="text-lg font-extrabold tracking-tight text-ink dark:text-ink-dark"
+          className={`text-base font-extrabold tracking-tight sm:text-lg ${
+            onHero ? 'text-ink-dark' : 'text-ink dark:text-ink-dark'
+          }`}
         >
-          M<span className="text-accent">.</span>Rakotovao
+          M. Rakotovao
         </button>
 
         <ul className="hidden items-center gap-1 md:flex">
@@ -68,19 +73,16 @@ export default function Navbar() {
               <button
                 onClick={() => go(link.id)}
                 aria-current={active === link.id ? 'true' : undefined}
-                className={`relative rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+                className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
                   active === link.id
-                    ? 'text-accent'
-                    : 'text-ink-mute hover:text-ink dark:text-ink-dark-mute dark:hover:text-ink-dark'
+                    ? onHero
+                      ? 'bg-nav-pill text-ink-dark'
+                      : 'bg-accent/10 text-accent'
+                    : onHero
+                      ? 'text-ink-dark-mute hover:text-ink-dark'
+                      : 'text-ink-mute hover:text-ink dark:text-ink-dark-mute dark:hover:text-ink-dark'
                 }`}
               >
-                {active === link.id && (
-                  <motion.span
-                    layoutId="nav-pill"
-                    transition={{ type: 'spring', stiffness: 350, damping: 30 }}
-                    className="absolute inset-0 -z-10 rounded-full bg-accent/10"
-                  />
-                )}
                 {link.label}
               </button>
             </li>
@@ -91,7 +93,11 @@ export default function Navbar() {
           <button
             onClick={toggleTheme}
             aria-label={`Passer en mode ${theme === 'dark' ? 'clair' : 'sombre'}`}
-            className="grid h-10 w-10 place-items-center rounded-full border border-line text-ink transition-colors hover:border-accent hover:text-accent dark:border-line-dark dark:text-ink-dark"
+            className={`grid h-10 w-10 place-items-center rounded-full border transition-colors hover:border-accent hover:text-accent ${
+              onHero
+                ? 'border-white/20 text-ink-dark'
+                : 'border-line text-ink dark:border-line-dark dark:text-ink-dark'
+            }`}
           >
             <AnimatePresence mode="wait" initial={false}>
               <motion.span
@@ -110,7 +116,11 @@ export default function Navbar() {
             onClick={() => setOpen((o) => !o)}
             aria-label={open ? 'Fermer le menu' : 'Ouvrir le menu'}
             aria-expanded={open}
-            className="grid h-10 w-10 place-items-center rounded-full border border-line text-ink dark:border-line-dark dark:text-ink-dark md:hidden"
+            className={`grid h-10 w-10 place-items-center rounded-full border md:hidden ${
+              onHero
+                ? 'border-white/20 text-ink-dark'
+                : 'border-line text-ink dark:border-line-dark dark:text-ink-dark'
+            }`}
           >
             {open ? <FiX /> : <FiMenu />}
           </button>
@@ -123,7 +133,11 @@ export default function Navbar() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="overflow-hidden border-t border-line bg-surface/95 backdrop-blur-md dark:border-line-dark dark:bg-surface-dark/95 md:hidden"
+            className={`overflow-hidden border-t md:hidden ${
+              onHero
+                ? 'border-white/10 bg-hero-dark/95 backdrop-blur-md'
+                : 'border-line bg-surface/95 backdrop-blur-md dark:border-line-dark dark:bg-surface-dark/95'
+            }`}
           >
             <ul className="space-y-1 px-6 py-4">
               {LINKS.map((link) => (
@@ -132,8 +146,12 @@ export default function Navbar() {
                     onClick={() => go(link.id)}
                     className={`w-full rounded-lg px-4 py-2.5 text-left text-sm font-medium ${
                       active === link.id
-                        ? 'bg-accent/10 text-accent'
-                        : 'text-ink-mute dark:text-ink-dark-mute'
+                        ? onHero
+                          ? 'bg-nav-pill text-ink-dark'
+                          : 'bg-accent/10 text-accent'
+                        : onHero
+                          ? 'text-ink-dark-mute'
+                          : 'text-ink-mute dark:text-ink-dark-mute'
                     }`}
                   >
                     {link.label}

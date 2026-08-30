@@ -13,6 +13,12 @@
   --color-gold: #f59e0b;
   --color-gold-soft: #fbbf24;
 
+  /* Hero split-screen */
+  --color-hero-dark: #0b1011;
+  --color-hero-teal: #2d7a6e;
+  --color-hero-gold: #eebc6d;
+  --color-nav-pill: #142e2b;
+
   /* Surfaces (light mode) */
   --color-surface: #faf9f7;
   --color-surface-2: #ffffff;
