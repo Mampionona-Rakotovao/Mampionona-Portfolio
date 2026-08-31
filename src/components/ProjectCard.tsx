@@ -27,12 +27,12 @@ export default function ProjectCard({ project, onOpen }: ProjectCardProps) {
       >
         {/* Cover image / fallback */}
         {hasImages ? (
-          <div className="relative aspect-video overflow-hidden rounded-t-2xl">
+          <div className="relative aspect-video overflow-hidden rounded-t-2xl bg-ink/5 dark:bg-black/40">
             <img
               src={project.images![0]}
               alt={`Capture d'écran — ${project.title}`}
               loading="lazy"
-              className="h-full w-full object-cover transition-transform duration-400 ease-out group-hover:scale-105"
+              className="h-full w-full object-contain transition-transform duration-400 ease-out group-hover:scale-105"
             />
             <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-surface-2 to-transparent dark:from-surface-dark-2" />
             <span className="absolute left-4 top-4 inline-block rounded-full bg-black/30 px-3 py-1 text-xs font-bold uppercase tracking-wide text-white backdrop-blur-sm">

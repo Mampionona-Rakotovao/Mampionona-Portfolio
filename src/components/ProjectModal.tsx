@@ -101,7 +101,7 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
 
         {/* Image gallery */}
         {hasImages && (
-          <div className="relative aspect-video w-full overflow-hidden bg-black">
+          <div className="relative flex w-full items-center justify-center overflow-hidden bg-black">
             <AnimatePresence initial={false} custom={direction} mode="wait">
               <motion.img
                 key={photoIndex}
@@ -113,7 +113,7 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
                 animate={reduceMotion ? undefined : 'center'}
                 exit={reduceMotion ? undefined : 'exit'}
                 transition={{ duration: 0.3, ease: 'easeInOut' }}
-                className="h-full w-full object-cover"
+                className="max-h-[70vh] w-full object-contain"
               />
             </AnimatePresence>
 
@@ -200,4 +200,4 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
       </motion.div>
     </motion.div>
   )
-}
+}   
