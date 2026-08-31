@@ -1,7 +1,11 @@
-import { motion } from 'framer-motion'
+import { useEffect, useState } from 'react'
+import { motion, useReducedMotion } from 'framer-motion'
 import { FiDownload, FiMail, FiMapPin, FiPhone, FiArrowDown } from 'react-icons/fi'
 import { profile } from '../data/profile'
 import { useDownloadCV } from '../hooks/useDownloadCV'
+import AnimatedText from '../components/AnimatedText'
+import RotatingText from '../components/RotatingText'
+import { roles } from '../data/roles'
 
 /**
  * Hero — split-screen layout with portrait photo and gradient blend.
@@ -27,8 +31,24 @@ const item = {
   },
 }
 
+/** True when the viewport is desktop (lg breakpoint) — enables float & hover. */
+function useIsDesktop() {
+  const [isDesktop, setIsDesktop] = useState(
+    () => typeof window !== 'undefined' && window.matchMedia('(min-width: 1024px)').matches,
+  )
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 1024px)')
+    const onChange = () => setIsDesktop(mq.matches)
+    mq.addEventListener('change', onChange)
+    return () => mq.removeEventListener('change', onChange)
+  }, [])
+  return isDesktop
+}
+
 export default function Hero() {
   const { download, downloading } = useDownloadCV()
+  const reduceMotion = useReducedMotion()
+  const isDesktop = useIsDesktop()
 
   return (
     <section
@@ -38,17 +58,41 @@ export default function Hero() {
     >
       {/* Portrait + gradient blend */}
       <div className="pointer-events-none absolute inset-0" aria-hidden>
+        {/* Halo lumineux discret qui pulse derrière la photo (desktop) —
+            désactivé si prefers-reduced-motion */}
+        {!reduceMotion && (
+          <motion.div
+            animate={{ opacity: [0.35, 0.6, 0.35] }}
+            transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
+            className="absolute right-[6%] top-1/2 hidden h-[75%] w-[42%] -translate-y-1/2 rounded-full bg-accent-soft/25 blur-3xl lg:block"
+          />
+        )}
+
+        {/* Photo — fondu d'entrée une seule fois, puis flottement continu (desktop) */}
         <motion.div
           initial={{ opacity: 0, scale: 1.05 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1.2, ease: 'easeOut' }}
           className="absolute inset-0 lg:left-[38%]"
         >
-          <img
-            src="/portfolio.png"
-            alt=""
-            className="h-full w-full object-cover object-[center_15%] sm:object-[center_20%] lg:object-[62%_15%]"
-          />
+          {/* Flottement très léger façon respiration (desktop, gated par reduced-motion) */}
+          <motion.div
+            className="h-full w-full"
+            animate={isDesktop && !reduceMotion ? { y: [0, -8, 0] } : { y: 0 }}
+            transition={
+              isDesktop && !reduceMotion
+                ? { duration: 7, repeat: Infinity, ease: 'easeInOut' }
+                : { duration: 0 }
+            }
+          >
+            <motion.img
+              src="/portfolio.png"
+              alt=""
+              whileHover={isDesktop ? { scale: 1.04 } : undefined}
+              transition={{ duration: 0.6, ease: 'easeOut' }}
+              className="h-full w-full object-cover object-[center_15%] sm:object-[center_20%] lg:object-[62%_15%]"
+            />
+          </motion.div>
 
           {/* Overlay uniforme pour garder le texte lisible partout */}
           <div className="absolute inset-0 bg-black/25" />
@@ -83,25 +127,26 @@ export default function Hero() {
             <span className="w-full sm:w-auto">{profile.school}</span>
           </motion.p>
 
-          <motion.h1
-            variants={item}
-            className="text-[2.5rem] font-black leading-[1.05] tracking-tight text-ink-dark sm:text-5xl lg:text-[3.75rem]"
-          >
-            Mampionona Rakoto
-            <br />
-            vao
-          </motion.h1>
+          {/* Nom — révélé lettre par lettre (effet bascule 3D). Le texte complet
+              "Mampionona Rakotovao" reste une chaîne continue (pas de <br/>),
+              le retour à la ligne se fait naturellement sur les écrans étroits. */}
+          <AnimatedText
+            as="h1"
+            text="Mampionona Rakotovao"
+            stagger={0.025}
+            flip3D
+            colorShift={{ from: '#14b8a6', to: '#e7ece9' }}
+            className="mt-4 text-balance text-4xl font-black leading-[1.05] tracking-tight text-ink-dark sm:text-5xl lg:text-[3.75rem]"
+          />
 
-          <motion.p
-            variants={item}
-            className="mt-5 text-xl font-semibold sm:text-2xl lg:text-[1.65rem]"
-          >
+          {/* Sous-titre — chevron fixe + rôles défilants (effet compteur à rouleaux).
+              Le chevron ">" reste fixe, seul le rôle change après. */}
+          <p className="mt-5 text-xl font-semibold sm:text-2xl lg:text-[1.65rem]">
             <span className="text-accent-soft" aria-hidden>
               &gt;{' '}
             </span>
-            <span className="text-accent-soft">Full-</span>
-            <span className="text-hero-gold">Stack</span>
-          </motion.p>
+            <RotatingText words={roles} interval={2500} />
+          </p>
 
           <motion.p
             variants={item}
