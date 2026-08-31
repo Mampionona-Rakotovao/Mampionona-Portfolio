@@ -1,8 +1,13 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { FiSend, FiCheck, FiMail, FiPhone, FiMapPin } from 'react-icons/fi'
+import emailjs from '@emailjs/browser'
 import Section from '../components/Section'
 import { profile, socials } from '../data/profile'
+
+const EMAILJS_PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY as string
+const EMAILJS_SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID as string
+const EMAILJS_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID as string
 
 const leftContainer = {
   hidden: {},
@@ -37,22 +42,36 @@ const contactRows = [
 type Status = 'idle' | 'sending' | 'sent'
 
 /**
- * Contact — real contact details, social links and a mailto fallback form.
+ * Contact — real contact details, social links and EmailJS-powered form.
  */
 export default function Contact() {
   const [form, setForm] = useState({ name: '', email: '', message: '' })
   const [status, setStatus] = useState<Status>('idle')
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setStatus('sending')
-    setTimeout(() => {
-      const subject = encodeURIComponent(`Contact portfolio — ${form.name}`)
-      const body = encodeURIComponent(`${form.message}\n\n— ${form.name} (${form.email})`)
-      window.location.href = `mailto:${profile.email}?subject=${subject}&body=${body}`
+    try {
+      await emailjs.send(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        { name: form.name, email: form.email, message: form.message },
+        { publicKey: EMAILJS_PUBLIC_KEY },
+      )
       setStatus('sent')
+      setForm({ name: '', email: '', message: '' })
       setTimeout(() => setStatus('idle'), 4000)
-    }, 600)
+    } catch (err) {
+      setStatus('idle')
+      const e = err as { status?: number; text?: string; message?: string }
+      console.error('EmailJS error:', e.status, e.text || e.message)
+      alert(
+        "Erreur lors de l'envoi. Veuillez réessayer.\n\n" +
+          (e.text
+            ? `Détail (${e.status}): ${e.text}`
+            : 'Vérifiez que votre compte EmailJS est actif et le service Gmail connecté.'),
+      )
+    }
   }
 
   const inputClass =
