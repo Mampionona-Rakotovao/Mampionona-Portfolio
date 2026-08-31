@@ -10,10 +10,32 @@ interface RotatingTextProps {
   className?: string
 }
 
+interface LetterToken {
+  char: string
+  color: 'accent-soft' | 'hero-gold'
+}
+
 /**
- * Highlights the last word in gold and the rest in the accent colour, preserving
- * the Hero's two-tone identity for the subtitle.
+ * Flattens a label into an ordered list of letter tokens, each tagged with the
+ * colour of the word it belongs to (last word gold, the rest accent), so the
+ * per-letter animation can still respect the Hero's two-tone identity.
  */
+function tokenizeLabel(label: string): LetterToken[] {
+  const words = label.split(' ')
+  const tokens: LetterToken[] = []
+
+  words.forEach((word, wordIndex) => {
+    const color = wordIndex === words.length - 1 ? 'hero-gold' : 'accent-soft'
+    word.split('').forEach((char) => tokens.push({ char, color }))
+    if (wordIndex !== words.length - 1) {
+      tokens.push({ char: '\u00A0', color })
+    }
+  })
+
+  return tokens
+}
+
+/** Static (non-animated) version used for the sizer and the reduced-motion fallback. */
 function highlightLabel(label: string) {
   const parts = label.split(' ')
   return parts.map((word, i) =>
@@ -30,8 +52,16 @@ function highlightLabel(label: string) {
   )
 }
 
+// Each letter fades and rises into place, in order, left to right.
+const letterVariants = {
+  hidden: { opacity: 0, y: 6 },
+  show: { opacity: 1, y: 0 },
+}
+
 /**
- * Rotating role text — a "slot machine" that cycles through the given words.
+ * Rotating role text — cycles through the given words. The outgoing word fades
+ * out as a whole (fast), the incoming word reveals itself letter by letter,
+ * left to right, via a Framer Motion stagger.
  *
  * The container is an `inline-grid` where every word (including an invisible
  * sizer copy) is placed on the same grid cell. This keeps the layout width
@@ -66,6 +96,8 @@ export default function RotatingText({
     )
   }
 
+  const tokens = tokenizeLabel(current)
+
   return (
     <span className={`inline-grid overflow-hidden align-bottom ${className}`}>
       {/* Full list exposed once for screen readers (the animated copy is aria-hidden). */}
@@ -82,13 +114,32 @@ export default function RotatingText({
         <motion.span
           key={current}
           aria-hidden="true"
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          exit={{ y: -20, opacity: 0 }}
-          transition={{ duration: 0.4, ease: 'easeInOut' }}
+          // Outgoing word: quick fade of the whole block (handled by AnimatePresence exit).
+          exit={{ opacity: 0, transition: { duration: 0.15, ease: 'easeIn' } }}
           className="col-start-1 row-start-1 inline-block whitespace-nowrap"
         >
-          {highlightLabel(current)}
+          <motion.span
+            initial="hidden"
+            animate="show"
+            variants={{
+              hidden: {},
+              show: { transition: { staggerChildren: 0.035 } },
+            }}
+            className="inline-block"
+          >
+            {tokens.map((token, i) => (
+              <motion.span
+                key={i}
+                variants={letterVariants}
+                transition={{ duration: 0.50, ease: 'easeOut' }}
+                className={`inline-block ${
+                  token.color === 'hero-gold' ? 'text-hero-gold' : 'text-accent-soft'
+                }`}
+              >
+                {token.char}
+              </motion.span>
+            ))}
+          </motion.span>
         </motion.span>
       </AnimatePresence>
     </span>
