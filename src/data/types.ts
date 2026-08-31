@@ -39,6 +39,8 @@ export interface Project {
   /** Short label for the filter chip. */
   category: string
   highlight?: boolean
+  /** Optional screenshot images for the project gallery. */
+  images?: string[]
 }
 
 /** A social / contact link. */

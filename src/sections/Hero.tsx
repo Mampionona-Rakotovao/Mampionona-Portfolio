@@ -164,17 +164,17 @@ export default function Hero() {
               onClick={download}
               disabled={downloading}
               aria-label="Télécharger mon curriculum vitae au format PDF"
-              className="group inline-flex items-center justify-center gap-2 rounded-full bg-hero-teal px-6 py-3 text-sm font-semibold text-white transition-all hover:bg-accent-deep hover:shadow-lg hover:shadow-hero-teal/30 disabled:cursor-wait disabled:opacity-80"
+              className="group inline-flex items-center justify-center gap-2 rounded-full bg-hero-teal px-6 py-3 text-sm font-semibold text-white transition-all duration-300 hover:bg-accent-deep hover:shadow-lg hover:shadow-hero-teal/30 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-soft disabled:cursor-wait disabled:opacity-80"
             >
               <FiDownload
                 aria-hidden
-                className="text-base transition-transform group-hover:translate-y-0.5"
+                className="text-base transition-transform duration-300 group-hover:translate-y-0.5"
               />
               {downloading ? 'Préparation…' : 'Télécharger CV'}
             </button>
             <a
               href="#contact"
-              className="inline-flex items-center justify-center gap-2 rounded-full border border-white/25 px-6 py-3 text-sm font-semibold text-ink-dark transition-colors hover:border-white/50 hover:bg-white/5"
+              className="inline-flex items-center justify-center gap-2 rounded-full border border-white/25 px-6 py-3 text-sm font-semibold text-ink-dark transition-colors duration-300 hover:border-white/50 hover:bg-white/5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-soft"
             >
               <FiMail aria-hidden className="text-base" />
               Me contacter
@@ -191,7 +191,7 @@ export default function Hero() {
             </span>
             <a
               href={`tel:${profile.phone.replace(/\s/g, '')}`}
-              className="inline-flex items-center gap-2 transition-colors hover:text-accent-soft"
+              className="inline-flex items-center gap-2 transition-colors hover:text-accent-soft focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-soft"
             >
               <FiPhone aria-hidden className="shrink-0 text-accent-soft" />
               {profile.phone}
@@ -207,7 +207,7 @@ export default function Hero() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.1, duration: 0.6 }}
-        className="absolute bottom-6 left-1/2 flex h-10 w-10 -translate-x-1/2 items-center justify-center rounded-full border border-white/20 text-accent-soft"
+        className="absolute bottom-6 left-1/2 flex h-10 w-10 -translate-x-1/2 items-center justify-center rounded-full border border-white/20 text-accent-soft focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-soft"
       >
         <motion.span
           animate={{ y: [0, 6, 0] }}

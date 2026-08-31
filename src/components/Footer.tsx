@@ -4,7 +4,7 @@ import { profile } from '../data/profile'
 export default function Footer() {
   return (
     <footer className="border-t border-line bg-surface-2 py-8 dark:border-line-dark dark:bg-surface-dark-2">
-      <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-6 text-sm text-ink-mute dark:text-ink-dark-mute sm:flex-row">
+      <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-6 text-sm text-ink-mute dark:text-ink-dark-mute sm:flex-row sm:px-10">
         <p>
           © {new Date().getFullYear()} {profile.shortName}
         </p>

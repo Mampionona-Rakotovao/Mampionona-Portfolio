@@ -5,10 +5,10 @@ import { education } from '../data/education'
 import Section from '../components/Section'
 
 const itemVariants = {
-  hidden: { opacity: 0, x: -24 },
+  hidden: { opacity: 0, y: 24 },
   visible: (i: number) => ({
     opacity: 1,
-    x: 0,
+    y: 0,
     transition: { duration: 0.5, delay: i * 0.12, ease: [0.22, 1, 0.36, 1] as const },
   }),
 }
@@ -51,7 +51,7 @@ export default function Education() {
               variants={itemVariants}
               initial="hidden"
               whileInView="visible"
-              viewport={{ once: true, margin: '-60px' }}
+              viewport={{ once: true, margin: '-100px' }}
               className="relative pl-10"
             >
               <motion.span

@@ -8,11 +8,10 @@ const gridContainer = {
 }
 
 const cardVariants = {
-  hidden: { opacity: 0, y: 36, scale: 0.97 },
+  hidden: { opacity: 0, y: 36 },
   visible: {
     opacity: 1,
     y: 0,
-    scale: 1,
     transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] as const },
   },
 }
@@ -48,7 +47,7 @@ export default function Skills() {
         variants={gridContainer}
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, margin: '-80px' }}
+        viewport={{ once: true, margin: '-100px' }}
         className="grid gap-6 md:grid-cols-2"
       >
         {skillCategories.map((cat) => {

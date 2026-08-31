@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import { FiCompass, FiCheck } from 'react-icons/fi'
 import Section from '../components/Section'
 import ProfileSidebar from '../components/ProfileSidebar'
 import { profile } from '../data/profile'
@@ -31,7 +32,7 @@ export default function About() {
             variants={bioReveal}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, margin: '-80px' }}
+            viewport={{ once: true, margin: '-100px' }}
             className="relative pl-6"
           >
             <motion.span
@@ -50,7 +51,7 @@ export default function About() {
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-60px' }}
+            viewport={{ once: true, margin: '-100px' }}
             transition={{ duration: 0.6, delay: 0.35 }}
             className="grid gap-4 sm:grid-cols-3"
           >
@@ -74,6 +75,39 @@ export default function About() {
                 </p>
               </motion.div>
             ))}
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-100px' }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            className="rounded-2xl border border-line bg-surface-2 p-6 shadow-card dark:border-line-dark dark:bg-surface-dark-2"
+          >
+            <h3 className="mb-3 flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-accent">
+              <FiCompass aria-hidden /> Ce que je recherche
+            </h3>
+            <p className="text-base leading-relaxed text-ink-mute dark:text-ink-dark-mute">
+              Je suis à la recherche de stages, de projets freelance et d&apos;opportunités en
+              alternance pour mettre en pratique mes compétences en développement web et mobile, et
+              apprendre auprès d&apos;équipes expérimentées.
+            </p>
+            <ul className="mt-4 grid gap-2 sm:grid-cols-2">
+              {[
+                'Stack principale : JavaScript / TypeScript, React, Node.js',
+                'Disponible immédiatement pour un stage',
+                'Open source et projets concrets',
+                'Attiré par le full-stack web & mobile',
+              ].map((point) => (
+                <li
+                  key={point}
+                  className="flex items-start gap-2 text-sm text-ink-mute dark:text-ink-dark-mute"
+                >
+                  <FiCheck className="mt-0.5 shrink-0 text-accent" aria-hidden />
+                  <span>{point}</span>
+                </li>
+              ))}
+            </ul>
           </motion.div>
         </div>
       </div>

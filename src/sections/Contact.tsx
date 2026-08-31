@@ -1,28 +1,62 @@
 import { useState } from 'react'
-import { motion } from 'framer-motion'
-import { FiSend } from 'react-icons/fi'
+import { motion, AnimatePresence } from 'framer-motion'
+import { FiSend, FiCheck, FiMail, FiPhone, FiMapPin } from 'react-icons/fi'
 import Section from '../components/Section'
-import ProfileSidebar from '../components/ProfileSidebar'
 import { profile, socials } from '../data/profile'
 
+const leftContainer = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.08 } },
+}
+
+const leftItem = {
+  hidden: { opacity: 0, x: -24 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] as const },
+  },
+}
+
+const contactRows = [
+  {
+    icon: FiMail,
+    label: 'Email',
+    value: profile.email,
+    href: `mailto:${profile.email}`,
+  },
+  {
+    icon: FiPhone,
+    label: 'Téléphone',
+    value: profile.phone,
+    href: `tel:${profile.phone.replace(/\s/g, '')}`,
+  },
+  { icon: FiMapPin, label: 'Localisation', value: profile.location },
+] as const
+
+type Status = 'idle' | 'sending' | 'sent'
+
 /**
- * Contact — CV sidebar + contact form with mailto fallback.
+ * Contact — real contact details, social links and a mailto fallback form.
  */
 export default function Contact() {
   const [form, setForm] = useState({ name: '', email: '', message: '' })
-  const [sent, setSent] = useState(false)
+  const [status, setStatus] = useState<Status>('idle')
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    const subject = encodeURIComponent(`Contact portfolio — ${form.name}`)
-    const body = encodeURIComponent(`${form.message}\n\n— ${form.name} (${form.email})`)
-    window.location.href = `mailto:${profile.email}?subject=${subject}&body=${body}`
-    setSent(true)
-    setTimeout(() => setSent(false), 4000)
+    setStatus('sending')
+    setTimeout(() => {
+      const subject = encodeURIComponent(`Contact portfolio — ${form.name}`)
+      const body = encodeURIComponent(`${form.message}\n\n— ${form.name} (${form.email})`)
+      window.location.href = `mailto:${profile.email}?subject=${subject}&body=${body}`
+      setStatus('sent')
+      setTimeout(() => setStatus('idle'), 4000)
+    }, 600)
   }
 
   const inputClass =
-    'w-full rounded-xl border border-line bg-surface px-4 py-3 text-sm text-ink placeholder:text-ink-mute/60 outline-none transition-colors focus:border-accent focus:ring-2 focus:ring-accent/20 dark:border-line-dark dark:bg-surface-dark dark:text-ink-dark'
+    'w-full rounded-xl border border-line bg-surface px-4 py-3 text-sm text-ink placeholder:text-ink-mute/60 outline-none transition-all duration-200 focus:border-accent-soft focus:ring-2 focus:ring-accent-soft/40 focus:shadow-[0_0_0_4px_rgba(20,184,166,0.08)] dark:border-line-dark dark:bg-surface-dark dark:text-ink-dark'
 
   return (
     <Section
@@ -32,17 +66,58 @@ export default function Contact() {
       subtitle="Une question, un projet ou une opportunité de stage ? N’hésitez pas à me contacter."
     >
       <div className="grid items-start gap-10 lg:grid-cols-[minmax(280px,340px)_1fr]">
-        <div className="space-y-6">
-          <ProfileSidebar />
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-60px' }}
-            transition={{ delay: 0.3 }}
-            className="flex justify-center gap-3 lg:justify-start"
+        <motion.div
+          variants={leftContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '-100px' }}
+          className="space-y-8"
+        >
+          <motion.p
+            variants={leftItem}
+            className="text-base leading-relaxed text-ink-mute dark:text-ink-dark-mute"
           >
-            {socials.map((s, i) => {
+            Je suis ouvert aux opportunités de stage et aux projets collaboratifs. Préférez-vous un
+            échange direct ? Voici mes coordonnées et mes réseaux.
+          </motion.p>
+
+          <motion.ul variants={leftContainer} className="space-y-4">
+            {contactRows.map((row) => {
+              const Icon = row.icon
+              const content = (
+                <>
+                  <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-accent/10 text-accent transition-transform duration-200 group-hover:scale-110">
+                    <Icon aria-hidden className="text-lg" />
+                  </span>
+                  <span className="min-w-0">
+                    <span className="block text-[10px] font-bold uppercase tracking-wider text-ink-mute dark:text-ink-dark-mute">
+                      {row.label}
+                    </span>
+                    <span className="block break-words text-sm font-semibold text-ink dark:text-ink-dark">
+                      {row.value}
+                    </span>
+                  </span>
+                </>
+              )
+              return (
+                <motion.li key={row.label} variants={leftItem}>
+                  {'href' in row && row.href ? (
+                    <a
+                      href={row.href}
+                      className="group flex items-center gap-3 rounded-xl p-1 transition-colors duration-200 hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+                    >
+                      {content}
+                    </a>
+                  ) : (
+                    <div className="group flex items-center gap-3 rounded-xl p-1">{content}</div>
+                  )}
+                </motion.li>
+              )
+            })}
+          </motion.ul>
+
+          <motion.div variants={leftContainer} className="flex gap-3">
+            {socials.map((s) => {
               const Icon = s.icon
               return (
                 <motion.a
@@ -51,33 +126,26 @@ export default function Contact() {
                   target="_blank"
                   rel="noreferrer"
                   aria-label={s.label}
-                  initial={{ opacity: 0, scale: 0.5 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.35 + i * 0.08, type: 'spring', stiffness: 300 }}
-                  whileHover={{ y: -4, scale: 1.08 }}
-                  className="grid h-11 w-11 place-items-center rounded-full border border-line text-lg text-ink-mute transition-colors hover:border-accent hover:text-accent dark:border-line-dark dark:text-ink-dark-mute"
+                  variants={leftItem}
+                  whileHover={{ scale: 1.1, rotate: 5 }}
+                  transition={{ duration: 0.2 }}
+                  className="grid h-11 w-11 place-items-center rounded-full border border-line text-lg text-ink-mute transition-colors duration-200 hover:border-accent-soft hover:bg-accent-soft/15 hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent dark:border-line-dark dark:text-ink-dark-mute"
                 >
                   <Icon aria-hidden />
                 </motion.a>
               )
             })}
           </motion.div>
-        </div>
+        </motion.div>
 
         <motion.form
           onSubmit={handleSubmit}
-          initial={{ opacity: 0, x: 40 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true, margin: '-80px' }}
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] as const }}
           className="space-y-4 rounded-2xl border border-line bg-surface-2 p-6 shadow-card dark:border-line-dark dark:bg-surface-dark-2 sm:p-8"
         >
-          <p className="text-sm leading-relaxed text-ink-mute dark:text-ink-dark-mute">
-            Je suis ouvert aux opportunités de stage et aux projets collaboratifs. Remplissez le
-            formulaire ci-dessous et je vous répondrai rapidement.
-          </p>
-
           <div className="grid gap-4 sm:grid-cols-2">
             <input
               type="text"
@@ -109,11 +177,57 @@ export default function Contact() {
           />
           <motion.button
             type="submit"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            className="relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-full bg-accent px-6 py-3 text-sm font-semibold text-white shadow-card transition-colors duration-300 hover:bg-accent-deep"
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
+            disabled={status !== 'idle'}
+            className="relative inline-flex min-h-[2.75rem] w-full items-center justify-center gap-2 overflow-hidden rounded-full bg-accent px-6 py-3 text-sm font-semibold text-white shadow-card transition-colors duration-300 hover:bg-accent-deep focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:cursor-wait sm:w-auto"
           >
-            <FiSend aria-hidden /> {sent ? 'Message prêt dans votre client mail !' : 'Envoyer'}
+            <AnimatePresence mode="wait" initial={false}>
+              {status === 'idle' && (
+                <motion.span
+                  key="idle"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.2 }}
+                  className="inline-flex items-center gap-2"
+                >
+                  <FiSend aria-hidden /> Envoyer
+                </motion.span>
+              )}
+              {status === 'sending' && (
+                <motion.span
+                  key="sending"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.2 }}
+                  className="inline-flex items-center gap-2"
+                >
+                  Envoi en cours…
+                </motion.span>
+              )}
+              {status === 'sent' && (
+                <motion.span
+                  key="sent"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.2 }}
+                  className="inline-flex items-center gap-2"
+                >
+                  <motion.span
+                    initial={{ scale: 0 }}
+                    animate={{ scale: [0, 1.2, 1] }}
+                    transition={{ duration: 0.35 }}
+                    className="grid h-4 w-4 place-items-center rounded-full bg-white/20"
+                  >
+                    <FiCheck aria-hidden className="text-sm" />
+                  </motion.span>
+                  Message prêt !
+                </motion.span>
+              )}
+            </AnimatePresence>
           </motion.button>
         </motion.form>
       </div>

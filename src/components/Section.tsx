@@ -29,19 +29,19 @@ const item = {
  */
 export default function Section({ id, label, title, subtitle, children, className = '' }: SectionProps) {
   return (
-    <section id={id} aria-labelledby={`${id}-title`} className={`py-24 sm:py-28 ${className}`}>
+    <section id={id} aria-labelledby={`${id}-title`} className={`py-24 sm:py-32 ${className}`}>
       <motion.div
         variants={container}
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, margin: '-80px' }}
-        className="mx-auto max-w-6xl px-6"
+        viewport={{ once: true, margin: '-100px' }}
+        className="mx-auto max-w-6xl px-6 sm:px-10"
       >
         <motion.div variants={item} className="mb-14 max-w-2xl">
           <span className="text-sm font-bold uppercase tracking-widest text-accent">{label}</span>
           <h2
             id={`${id}-title`}
-            className="mt-2 text-3xl font-extrabold tracking-tight text-ink dark:text-ink-dark sm:text-4xl"
+            className="mt-2 text-2xl font-extrabold tracking-tight text-ink dark:text-ink-dark sm:text-3xl"
           >
             {title}
           </h2>

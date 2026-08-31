@@ -13,6 +13,14 @@ export const projects: Project[] = [
     description:
       'Application Android de gestion des chanteurs : architecture MVC, persistance SQLite, recherche multicritère, gestion de photos, tableau de bord statistiques et validation de formulaires.',
     highlight: true,
+    images: [
+      '/projects/android-chanteurs/1.webp',
+      '/projects/android-chanteurs/2.webp',
+      '/projects/android-chanteurs/3.webp',
+      '/projects/android-chanteurs/4.webp',
+      '/projects/android-chanteurs/5.webp',
+      '/projects/android-chanteurs/6.webp',
+    ],
   },
   {
     id: 'avion-spring-kotlin',
@@ -23,11 +31,19 @@ export const projects: Project[] = [
     category: 'Mobile',
     tech: ['Spring Boot', 'Kotlin', 'PostgreSQL'],
     description:
-      'Gestion CRUD des véhicules : API REST Spring Boot + PostgreSQL consommée depuis Kotlin, gestion d’images et tests fonctionnels.',
+      'Gestion CRUD des véhicules : API REST Spring Boot + PostgreSQL consommée depuis Kotlin, gestion d\'images et tests fonctionnels.',
+    images: [
+      '/projects/avion-spring-kotlin/1.webp',
+      '/projects/avion-spring-kotlin/2.webp',
+      '/projects/avion-spring-kotlin/3.webp',
+      '/projects/avion-spring-kotlin/4.webp',
+      '/projects/avion-spring-kotlin/5.webp',
+      '/projects/avion-spring-kotlin/6.webp',
+    ],
   },
   {
     id: 'billets-js',
-    title: 'Réservation de billets d’avion — JS Fullstack',
+    title: 'Réservation de billets d\'avion — JS Fullstack',
     subtitle: 'React · Node · PostgreSQL',
     period: 'Avril–Mai 2026',
     place: 'ENI Toliara',
@@ -36,9 +52,19 @@ export const projects: Project[] = [
     description:
       'Base PostgreSQL, API REST, gestion des réservations et paiements, authentification JWT, interface React, versionné avec Git/GitHub.',
     highlight: true,
+    images: [
+      '/projects/billets-js/1.webp',
+      '/projects/billets-js/2.webp',
+      '/projects/billets-js/3.webp',
+      '/projects/billets-js/4.webp',
+      '/projects/billets-js/5.webp',
+      '/projects/billets-js/6.webp',
+      '/projects/billets-js/7.webp',
+      '/projects/billets-js/8.webp',
+    ],
   },
   {
-    id: 'mobile-money-jsp',
+    id: 'mobile-money',
     title: 'Gestion de Mobile Money avec JSP',
     subtitle: 'JSP · Servlets · SQL',
     period: 'Mars 2026',
@@ -46,7 +72,15 @@ export const projects: Project[] = [
     category: 'Web',
     tech: ['JSP', 'Servlets', 'SQL'],
     description:
-      'Application web simulant dépôt / retrait / transfert d’argent : base de données relationnelle, requêtes SQL, interfaces JSP et validation des saisies.',
+      'Application web simulant dépôt / retrait / transfert d\'argent : base de données relationnelle, requêtes SQL, interfaces JSP et validation des saisies.',
+    images: [
+      '/projects/mobile-money/1.webp',
+      '/projects/mobile-money/2.webp',
+      '/projects/mobile-money/3.webp',
+      '/projects/mobile-money/4.webp',
+      '/projects/mobile-money/5.webp',
+      '/projects/mobile-money/6.webp',
+    ],
   },
   {
     id: 'carso',
@@ -57,19 +91,31 @@ export const projects: Project[] = [
     category: 'Fullstack',
     tech: ['React', 'Laravel', 'PostgreSQL'],
     description:
-      'Plateforme de gestion de formation et de coaching : développement backend/frontend, bases de données relationnelles, API REST, correction d’anomalies et travail avec Git/GitHub.',
+      'Plateforme de gestion de formation et de coaching : développement backend/frontend, bases de données relationnelles, API REST, correction d\'anomalies et travail avec Git/GitHub.',
     highlight: true,
+    images: [
+      '/projects/carso/1.webp',
+      '/projects/carso/2.webp',
+      '/projects/carso/3.webp',
+      '/projects/carso/4.webp',
+      '/projects/carso/5.webp',
+      '/projects/carso/6.webp',
+      '/projects/carso/7.webp',
+      '/projects/carso/8.webp',
+      '/projects/carso/9.webp',
+      '/projects/carso/10.webp',
+    ],
   },
   {
     id: 'billets-csharp',
-    title: 'Réservation de billets d’avion avec C#',
+    title: 'Réservation de billets d\'avion avec C#',
     subtitle: 'C# · .NET',
     period: 'Avril 2025',
     place: 'ENI Toliara',
     category: 'Desktop',
     tech: ['C#', '.NET'],
     description:
-      'Gestion des vols, passagers et réservations avec opérations CRUD et amélioration de l’expérience utilisateur.',
+      'Gestion des vols, passagers et réservations avec opérations CRUD et amélioration de l\'expérience utilisateur.',
   },
   {
     id: 'gestion-bancaire',
@@ -80,7 +126,7 @@ export const projects: Project[] = [
     category: 'Web',
     tech: ['Laravel'],
     description:
-      'Gestion des comptes et transactions, opérations CRUD, en suivant l’architecture MVC de Laravel.',
+      'Gestion des comptes et transactions, opérations CRUD, en suivant l\'architecture MVC de Laravel.',
   },
   {
     id: 'gestion-enseignants',
@@ -93,13 +139,4 @@ export const projects: Project[] = [
     description:
       'API REST Express.js, interface React, opérations CRUD complètes, tests et corrections.',
   },
-]
-
-/** Unique technology tags extracted for the filter chips. */
-export const projectCategories: string[] = [
-  'Tout',
-  'Fullstack',
-  'Web',
-  'Mobile',
-  'Desktop',
 ]
