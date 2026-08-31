@@ -9,6 +9,10 @@ export const profile = {
   title: 'Étudiant en Licence 3 Informatique',
   school: 'École Nationale d’Informatique — Fianarantsoa',
   location: 'Toliara, Madagascar',
+  address: 'Sanfily Toliara 601',
+  city: 'Tuléar 601',
+  birthDate: '21/01/2006',
+  nationality: 'Malgache',
   email: 'mampiononarakotovao06@gmail.com',
   phone: '+261 32 95 398 03',
   tagline:
@@ -20,15 +24,13 @@ export const profile = {
     'Full-Stack Developer',
   ],
   languages: [
-    { name: 'Malgache', level: 'Natale' },
     { name: 'Français', level: 'Courant' },
     { name: 'Anglais', level: 'Intermédiaire' },
   ],
-  about: `Étudiant en troisième année de Licence en Informatique, passionné par le développement
-    logiciel, les technologies web et les bases de données. Curieux, rigoureux et doté d'un bon
-    esprit d'équipe, je souhaite contribuer à des projets innovants tout en développant mes
-    compétences techniques.`,
+  interests: ['Lecture', 'Football', 'Basket-ball'],
+  about: `Étudiant en troisième année de Licence en Informatique à l'École Nationale d'Informatique de Fianarantsoa, passionné par le développement logiciel, les technologies web et les bases de données. Curieux, rigoureux et doté d'un bon esprit d'équipe, je souhaite contribuer à des projets innovants tout en développant mes compétences techniques.`,
   resumeUrl: '/CV.pdf',
+  resumeFilename: 'CV_Razafindraimindra_Mampionona_Rakotovao.pdf',
 } as const
 
 /** Social links — extend later if needed. */

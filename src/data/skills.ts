@@ -17,21 +17,28 @@ import {
   SiLinux,
   SiKotlin,
 } from 'react-icons/si'
-import { TbCode, TbTable, TbTools, TbDatabase, TbLanguage, TbBox } from 'react-icons/tb'
+import { TbDatabase, TbCode, TbBox, TbTools } from 'react-icons/tb'
 import { VscVscode } from 'react-icons/vsc'
-import { FaJava, FaFileExcel, FaPeopleGroup, FaClipboardCheck } from 'react-icons/fa6'
+import { FaJava, FaClipboardCheck, FaPeopleGroup } from 'react-icons/fa6'
 import { RiLungsLine } from 'react-icons/ri'
+import { TbLanguage } from 'react-icons/tb'
 import type { IconType } from 'react-icons'
 import type { SkillCategory } from './types'
 
-/**
- * Technical skills organised by category.
- * `level` (0-100) drives the animated progress bars.
- */
+/** Technical skills organised by category (aligned with CV). */
 export const skillCategories: SkillCategory[] = [
   {
+    id: 'databases',
+    label: 'Base de données',
+    icon: TbDatabase,
+    skills: [
+      { name: 'PostgreSQL', level: 80, icon: SiPostgresql },
+      { name: 'MySQL', level: 75, icon: SiMysql },
+    ],
+  },
+  {
     id: 'languages',
-    label: 'Langages',
+    label: 'Langage',
     icon: TbCode,
     skills: [
       { name: 'Java', level: 85, icon: FaJava },
@@ -44,7 +51,7 @@ export const skillCategories: SkillCategory[] = [
   },
   {
     id: 'frameworks',
-    label: 'Frameworks',
+    label: 'Framework',
     icon: TbBox,
     skills: [
       { name: 'Spring Boot', level: 80, icon: SiSpringboot },
@@ -53,17 +60,7 @@ export const skillCategories: SkillCategory[] = [
       { name: 'Express.js', level: 75, icon: SiExpress },
       { name: 'Laravel', level: 70, icon: SiLaravel },
       { name: 'JSP', level: 65 },
-      { name: 'Kotlin / Compose', level: 70, icon: SiKotlin },
-    ],
-  },
-  {
-    id: 'databases',
-    label: 'Bases de données',
-    icon: TbDatabase,
-    skills: [
-      { name: 'PostgreSQL', level: 80, icon: SiPostgresql },
-      { name: 'MySQL', level: 75, icon: SiMysql },
-      { name: 'SQLite', level: 75, icon: SiSqlite },
+      { name: 'Kotlin', level: 70, icon: SiKotlin },
     ],
   },
   {
@@ -79,15 +76,6 @@ export const skillCategories: SkillCategory[] = [
       { name: 'Linux', level: 70, icon: SiLinux },
     ],
   },
-  {
-    id: 'office',
-    label: 'Bureautique',
-    icon: TbTable,
-    skills: [
-      { name: 'Excel', level: 75, icon: FaFileExcel },
-      { name: 'Word', level: 80 },
-    ],
-  },
 ]
 
 /** Soft skills shown as animated badges in the About section. */
@@ -96,12 +84,4 @@ export const softSkills: { name: string; icon: IconType }[] = [
   { name: 'Capacité d’adaptation', icon: RiLungsLine },
   { name: 'Bonne communication', icon: TbLanguage },
   { name: 'Esprit d’équipe', icon: FaPeopleGroup },
-]
-
-/** Personal strengths / qualities displayed on the About section. */
-export const traits: string[] = [
-  'Curieux',
-  'Rigoureux',
-  'Bon esprit d’équipe',
-  'Passionné par le développement',
 ]

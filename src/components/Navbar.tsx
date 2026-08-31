@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { FiMenu, FiX, FiSun, FiMoon } from 'react-icons/fi'
+import { FiMenu, FiX, FiSun, FiMoon, FiDownload } from 'react-icons/fi'
 import { useTheme } from '../hooks/useTheme'
+import { useDownloadCV } from '../hooks/useDownloadCV'
 
 const LINKS = [
   { id: 'accueil', label: 'Accueil' },
@@ -18,6 +19,7 @@ const LINKS = [
  */
 export default function Navbar() {
   const { theme, toggleTheme } = useTheme()
+  const { download, downloading } = useDownloadCV()
   const [active, setActive] = useState('accueil')
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
@@ -90,6 +92,21 @@ export default function Navbar() {
         </ul>
 
         <div className="flex items-center gap-2">
+          <button
+            onClick={download}
+            disabled={downloading}
+            aria-label="Télécharger mon curriculum vitae au format PDF"
+            title="Télécharger mon CV"
+            className={`hidden items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold transition-all hover:bg-accent hover:text-white sm:inline-flex ${
+              onHero
+                ? 'bg-nav-pill text-ink-dark'
+                : 'bg-accent/10 text-accent dark:bg-accent/15 dark:text-accent-soft'
+            } ${downloading ? 'cursor-wait opacity-70' : ''}`}
+          >
+            <FiDownload aria-hidden />
+            {downloading ? '…' : 'CV'}
+          </button>
+
           <button
             onClick={toggleTheme}
             aria-label={`Passer en mode ${theme === 'dark' ? 'clair' : 'sombre'}`}

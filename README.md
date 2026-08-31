@@ -19,7 +19,7 @@ Toutes les couleurs sont définies via les variables Tailwind `@theme` dans `src
 
 ## Fonctionnalités
 
-- **Hero** : nom révélé lettre par lettre, effet typewriter sur les rôles, parallaxe sur la photo, CTA magnétiques.
+- **Hero** : nom révélé lettre par lettre, effet typewriter sur les rôles, parallaxe sur la photo, CTA magnétiques, **téléchargement du CV** (Blob + nom de fichier propre).
 - **À propos** : texte de présentation, atouts et langues animés.
 - **Compétences** : grille de catégories avec barres de progression animées (stagger au scroll).
 - **Formation** : timeline verticale dont la ligne se dessine progressivement au scroll.
@@ -95,8 +95,8 @@ npm run lint         # analyse statique (oxlint)
 ## Personnalisation
 
 - **Données** : éditez les fichiers sous `src/data/` (expériences, compétences, formation, identité).
-- **Photo de profil** : placez une image dans `src/assets/` puis passez-la via la prop `photo` du composant `Hero` dans `src/App.tsx`. Par défaut, un monogramme « MR » s’affiche.
-- **CV** : remplacez `public/CV.pdf` par votre curriculum vitae.
+- **Photo de profil** : remplacez `public/portfolio.png` (utilisée en fond du Hero).
+- **CV** : remplacez `public/CV.pdf` par votre curriculum vitae. Le nom du fichier téléchargé se règle via `resumeFilename` dans `src/data/profile.ts`. Téléchargement disponible depuis le Hero et la barre de navigation.
 
 ## Déploiement (Vercel / Netlify)
 
