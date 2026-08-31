@@ -7,7 +7,7 @@ import ProjectModal from '../components/ProjectModal'
 import { projects } from '../data/experiences'
 import type { Project } from '../data/types'
 
-const PROJECTS_PER_PAGE = 4
+const PROJECTS_PER_PAGE = 3
 
 /**
  * Projects/Experiences — paginated grid with a detail modal.
