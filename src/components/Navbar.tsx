@@ -50,9 +50,33 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
+  /**
+   * Navigates to a section by id.
+   *
+   * Closes the mobile menu first, then waits one animation frame before
+   * scrolling — this avoids computing the scroll target while the header's
+   * height is still that of the open mobile menu (which would throw off the
+   * landing position on some mobile browsers).
+   *
+   * If the id doesn't match any element in the DOM, this logs a clear warning
+   * instead of failing silently (the previous `?.scrollIntoView(...)` masked
+   * this case entirely — a mismatched or missing section id would just do
+   * nothing, with no way to tell why).
+   */
   const go = (id: string) => {
     setOpen(false)
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
+
+    const el = document.getElementById(id)
+    if (!el) {
+      console.warn(
+        `[Navbar] Aucun élément trouvé avec l'id "${id}". Vérifie que la section correspondante a bien <section id="${id}"> posé sur sa balise racine.`,
+      )
+      return
+    }
+
+    requestAnimationFrame(() => {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    })
   }
 
   const onHero = active === 'accueil' && !scrolled
