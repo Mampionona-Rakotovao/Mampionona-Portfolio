@@ -1,5 +1,11 @@
 @import "tailwindcss";
 
+/*
+ * Force dark mode via the "class" strategy: `dark:` variants activate only
+ * when <html> carries the `.dark` class — never from `prefers-color-scheme`.
+ */
+@variant dark (&:is(.dark *));
+
 /* ---------------------------------------------------------------------------
    Palette — "Marina"
    Base neutrals warm & sober + a strong emerald/teal accent with an amber
@@ -45,7 +51,7 @@
   }
 
   body {
-    @apply bg-surface text-ink font-sans antialiased transition-colors duration-500;
+    @apply bg-surface text-ink font-sans antialiased transition-colors duration-300 motion-reduce:transition-none;
     @media (prefers-reduced-motion: reduce) {
       scroll-behavior: auto;
     }

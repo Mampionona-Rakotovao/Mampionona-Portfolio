@@ -17,9 +17,9 @@
     />
     <script>
       // Apply dark mode before paint to avoid flash.
-      const stored = localStorage.getItem('theme')
-      const system = window.matchMedia('(prefers-color-scheme: dark)').matches
-      if (stored === 'dark' || (!stored && system)) {
+      // Default is dark; system preference is never consulted.
+      const stored = localStorage.getItem('portfolio-theme')
+      if (stored !== 'light') {
         document.documentElement.classList.add('dark')
       }
     </script>

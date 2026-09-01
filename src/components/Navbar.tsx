@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
-import { FiDownload } from 'react-icons/fi'
+import { FiDownload, FiMoon, FiSun } from 'react-icons/fi'
 import { useDownloadCV } from '../hooks/useDownloadCV'
+import { useTheme } from '../hooks/useTheme'
 
 const LINKS = [
   { id: 'accueil', label: 'Accueil' },
@@ -37,6 +38,8 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
   const { download, downloading } = useDownloadCV()
+  const { theme, toggleTheme } = useTheme()
+  const nextThemeLabel = theme === 'dark' ? 'Passer en mode clair' : 'Passer en mode sombre'
 
   useEffect(() => {
     const onScroll = () => {
@@ -173,6 +176,34 @@ export default function Navbar() {
           })}
         </ul>
 
+        {/* Theme toggle (desktop) */}
+        <motion.button
+          whileHover={reduceMotion ? undefined : { scale: 1.1 }}
+          whileTap={reduceMotion ? undefined : { scale: 0.9 }}
+          onClick={toggleTheme}
+          aria-label={nextThemeLabel}
+          className={`grid h-10 w-10 shrink-0 place-items-center rounded-full border transition-colors duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${
+            onHero
+              ? 'border-white/20 text-ink-dark hover:bg-white/10'
+              : 'border-line text-ink hover:bg-black/5 dark:border-line-dark dark:text-ink-dark dark:hover:bg-white/5'
+          }`}
+        >
+          <span aria-hidden className="relative flex h-5 w-5 items-center justify-center">
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.span
+                key={theme}
+                initial={reduceMotion ? { opacity: 0 } : { opacity: 0, rotate: -90, scale: 0.6 }}
+                animate={{ opacity: 1, rotate: 0, scale: 1 }}
+                exit={reduceMotion ? { opacity: 0 } : { opacity: 0, rotate: 90, scale: 0.6 }}
+                transition={{ duration: 0.25, ease: 'easeInOut' }}
+                className="absolute"
+              >
+                {theme === 'dark' ? <FiSun className="text-lg" /> : <FiMoon className="text-lg" />}
+              </motion.span>
+            </AnimatePresence>
+          </span>
+        </motion.button>
+
         {/* CV download (desktop) */}
         <motion.button
           whileHover={reduceMotion ? undefined : { scale: 1.04 }}
@@ -275,6 +306,33 @@ export default function Navbar() {
                 >
                   <FiDownload aria-hidden className="text-base" />
                   {downloading ? 'Téléchargement…' : 'Télécharger CV'}
+                </button>
+              </motion.li>
+              <motion.li variants={menuItem}>
+                <button
+                  onClick={toggleTheme}
+                  aria-label={nextThemeLabel}
+                  className={`flex w-full items-center gap-2 rounded-lg px-4 py-2.5 text-left text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold ${
+                    onHero
+                      ? 'text-ink-dark-mute hover:text-ink-dark'
+                      : 'text-ink-mute hover:text-ink dark:text-ink-dark-mute dark:hover:text-ink-dark'
+                  }`}
+                >
+                  <span className="relative flex h-5 w-5 items-center justify-center">
+                    <AnimatePresence mode="wait" initial={false}>
+                      <motion.span
+                        key={theme}
+                        initial={reduceMotion ? { opacity: 0 } : { opacity: 0, rotate: -90, scale: 0.6 }}
+                        animate={{ opacity: 1, rotate: 0, scale: 1 }}
+                        exit={reduceMotion ? { opacity: 0 } : { opacity: 0, rotate: 90, scale: 0.6 }}
+                        transition={{ duration: 0.25, ease: 'easeInOut' }}
+                        className="text-lg"
+                      >
+                        {theme === 'dark' ? <FiSun /> : <FiMoon />}
+                      </motion.span>
+                    </AnimatePresence>
+                  </span>
+                  {theme === 'dark' ? 'Mode clair' : 'Mode sombre'}
                 </button>
               </motion.li>
             </motion.ul>
