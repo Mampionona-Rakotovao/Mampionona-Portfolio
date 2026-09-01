@@ -264,8 +264,8 @@ export default function Navbar() {
             transition={{ duration: 0.3, ease: 'easeInOut' }}
             className={`overflow-hidden border-t md:hidden ${
               onHero
-                ? 'border-white/10 bg-hero-dark/95 backdrop-blur-md'
-                : 'border-line bg-surface/95 backdrop-blur-md dark:border-line-dark dark:bg-surface-dark/95'
+                ? 'border-ink/10 bg-surface dark:border-white/10 dark:bg-hero-dark'
+                : 'border-line bg-surface dark:border-line-dark dark:bg-surface-dark'
             }`}
           >
             <motion.ul
