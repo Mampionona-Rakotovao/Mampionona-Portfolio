@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
+import { FiDownload } from 'react-icons/fi'
+import { useDownloadCV } from '../hooks/useDownloadCV'
 
 const LINKS = [
   { id: 'accueil', label: 'Accueil' },
@@ -34,6 +36,7 @@ export default function Navbar() {
   const [active, setActive] = useState('accueil')
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
+  const { download, downloading } = useDownloadCV()
 
   useEffect(() => {
     const onScroll = () => {
@@ -170,6 +173,23 @@ export default function Navbar() {
           })}
         </ul>
 
+        {/* CV download (desktop) */}
+        <motion.button
+          whileHover={reduceMotion ? undefined : { scale: 1.04 }}
+          whileTap={reduceMotion ? undefined : { scale: 0.96 }}
+          onClick={download}
+          disabled={downloading}
+          aria-label="Télécharger mon curriculum vitae"
+          className={`hidden items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-colors duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:cursor-wait md:inline-flex ${
+            onHero
+              ? 'bg-white/10 text-ink-dark hover:bg-white/20'
+              : 'bg-accent/10 text-accent hover:bg-accent/20 dark:bg-accent/10 dark:text-accent-soft dark:hover:bg-accent/20'
+          }`}
+        >
+          <FiDownload aria-hidden className="text-base" />
+          {downloading ? '…' : 'CV'}
+        </motion.button>
+
         {/* Burger (mobile) */}
         <button
           onClick={() => setOpen((o) => !o)}
@@ -243,6 +263,20 @@ export default function Navbar() {
                   </motion.li>
                 )
               })}
+              <motion.li variants={menuItem}>
+                <button
+                  onClick={download}
+                  disabled={downloading}
+                  className={`flex w-full items-center gap-2 rounded-lg px-4 py-2.5 text-left text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold disabled:cursor-wait ${
+                    onHero
+                      ? 'text-ink-dark-mute hover:text-ink-dark'
+                      : 'text-accent hover:bg-accent/10 dark:text-accent-soft dark:hover:bg-accent/10'
+                  }`}
+                >
+                  <FiDownload aria-hidden className="text-base" />
+                  {downloading ? 'Téléchargement…' : 'Télécharger CV'}
+                </button>
+              </motion.li>
             </motion.ul>
           </motion.nav>
         )}
