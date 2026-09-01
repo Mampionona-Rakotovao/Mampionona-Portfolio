@@ -1,6 +1,5 @@
 import type { SocialLink } from './types'
 import { SiGithub, SiGmail, SiFacebook } from 'react-icons/si'
-import { FaLinkedin } from 'react-icons/fa6'
 
 /** Central identity / profile data reused across sections. */
 export const profile = {
@@ -37,6 +36,5 @@ export const profile = {
 export const socials: SocialLink[] = [
   { label: 'GitHub', url: 'https://github.com/Mampionona-Rakotovao', icon: SiGithub },
   { label: 'Facebook', url: 'https://www.facebook.com/rzfdmampionona.rakotovao/', icon: SiFacebook },
-  { label: 'LinkedIn', url: 'https://linkedin.com/', icon: FaLinkedin },
   { label: 'Gmail', url: `mailto:${profile.email}`, icon: SiGmail },
 ]
