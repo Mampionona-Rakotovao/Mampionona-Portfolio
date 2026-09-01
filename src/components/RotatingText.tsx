@@ -12,7 +12,21 @@ interface RotatingTextProps {
 
 interface LetterToken {
   char: string
-  color: 'accent-soft' | 'hero-gold'
+  color: 'accent' | 'gold'
+}
+
+/**
+ * Tailwind classes for each semantic colour, with a light-mode default and a
+ * `dark:` override — `accent`/`gold` (darker, better contrast on the light
+ * cream background) in light mode, `accent-soft`/`hero-gold` (their brighter,
+ * dark-mode-tuned counterparts) once `.dark` is active. Using a single fixed
+ * accent regardless of theme was the reason the gold especially became
+ * unreadable in light mode (`hero-gold` is a pale tan, meant to sit on a
+ * near-black background).
+ */
+const COLOR_CLASSES: Record<LetterToken['color'], string> = {
+  accent: 'text-accent dark:text-accent-soft',
+  gold: 'text-gold dark:text-hero-gold',
 }
 
 /**
@@ -25,7 +39,7 @@ function tokenizeLabel(label: string): LetterToken[] {
   const tokens: LetterToken[] = []
 
   words.forEach((word, wordIndex) => {
-    const color = wordIndex === words.length - 1 ? 'hero-gold' : 'accent-soft'
+    const color: LetterToken['color'] = wordIndex === words.length - 1 ? 'gold' : 'accent'
     word.split('').forEach((char) => tokens.push({ char, color }))
     if (wordIndex !== words.length - 1) {
       tokens.push({ char: '\u00A0', color })
@@ -40,11 +54,11 @@ function highlightLabel(label: string) {
   const parts = label.split(' ')
   return parts.map((word, i) =>
     i === parts.length - 1 ? (
-      <span key={i} className="text-hero-gold">
+      <span key={i} className={COLOR_CLASSES.gold}>
         {word}
       </span>
     ) : (
-      <span key={i} className="text-accent-soft">
+      <span key={i} className={COLOR_CLASSES.accent}>
         {word}
         {'\u00A0'}
       </span>
@@ -131,10 +145,8 @@ export default function RotatingText({
               <motion.span
                 key={i}
                 variants={letterVariants}
-                transition={{ duration: 0.50, ease: 'easeOut' }}
-                className={`inline-block ${
-                  token.color === 'hero-gold' ? 'text-hero-gold' : 'text-accent-soft'
-                }`}
+                transition={{ duration: 0.5, ease: 'easeOut' }}
+                className={`inline-block ${COLOR_CLASSES[token.color]}`}
               >
                 {token.char}
               </motion.span>

@@ -3,12 +3,15 @@ import { motion, useReducedMotion } from 'framer-motion'
 import { FiDownload, FiMail, FiMapPin, FiPhone, FiArrowDown } from 'react-icons/fi'
 import { profile } from '../data/profile'
 import { useDownloadCV } from '../hooks/useDownloadCV'
+import { useTheme } from '../hooks/useTheme'
 import AnimatedText from '../components/AnimatedText'
 import RotatingText from '../components/RotatingText'
 import { roles } from '../data/roles'
 
 /**
  * Hero — split-screen layout with portrait photo and gradient blend.
+ * Follows the site's light/dark theme (see `useTheme`), including the
+ * gradient that blends the photo into the page background.
  */
 
 // Variants pour l'apparition en cascade du bloc texte
@@ -47,14 +50,21 @@ function useIsDesktop() {
 
 export default function Hero() {
   const { download, downloading } = useDownloadCV()
+  const { theme } = useTheme()
   const reduceMotion = useReducedMotion()
   const isDesktop = useIsDesktop()
+
+  // The name's letter-reveal animates its own colour via `colorShift`, so it
+  // must target the token that matches the *current* theme — a hardcoded hex
+  // here would make the name invisible whenever the theme doesn't match it
+  // (this was the root cause of the near-invisible name in light mode).
+  const nameEndColor = theme === 'dark' ? '#e7ece9' /* ink-dark */ : '#1f2428' /* ink */
 
   return (
     <section
       id="accueil"
       aria-label="Présentation"
-      className="relative min-h-screen overflow-hidden bg-hero-dark"
+      className="relative min-h-screen overflow-hidden bg-surface dark:bg-hero-dark"
     >
       {/* Portrait + gradient blend */}
       <div className="pointer-events-none absolute inset-0" aria-hidden>
@@ -94,14 +104,18 @@ export default function Hero() {
             />
           </motion.div>
 
-          {/* Overlay uniforme pour garder le texte lisible partout */}
-          <div className="absolute inset-0 bg-black/25" />
+          {/* Overlay uniforme pour garder le texte lisible — un peu plus léger en
+              clair (le fond derrière est déjà clair, pas besoin d'assombrir autant). */}
+          <div className="absolute inset-0 bg-black/10 dark:bg-black/25" />
 
-          {/* Fondu vertical (mobile/tablette) : image en fond de section */}
-          <div className="absolute inset-0 bg-gradient-to-b from-hero-dark/55 via-hero-dark/80 to-hero-dark lg:hidden" />
+          {/* Fondu vertical (mobile/tablette) : image en fond de section.
+              Les deux jeux de couleurs (clair par défaut, sombre via `dark:`)
+              coexistent sur le même calque. */}
+          <div className="absolute inset-0 bg-gradient-to-b from-surface/60 via-surface/85 to-surface dark:from-hero-dark/55 dark:via-hero-dark/80 dark:to-hero-dark lg:hidden" />
 
-          {/* Fondu horizontal (desktop) : dégradé progressif du sombre vers la photo, sans bande nette */}
-          <div className="absolute inset-0 hidden lg:block lg:bg-gradient-to-r lg:from-hero-dark lg:from-0% lg:via-hero-dark/70 lg:via-25% lg:to-transparent lg:to-60%" />
+          {/* Fondu horizontal (desktop) : dégradé progressif du fond de page vers
+              la photo, sans bande nette — suit le thème actif. */}
+          <div className="absolute inset-0 hidden bg-gradient-to-r from-surface from-0% via-surface/70 via-25% to-transparent to-60% dark:from-hero-dark dark:via-hero-dark/70 dark:to-transparent lg:block" />
         </motion.div>
       </div>
 
@@ -114,7 +128,7 @@ export default function Hero() {
         >
           <motion.p
             variants={item}
-            className="mb-5 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-medium text-ink-dark-mute sm:text-sm"
+            className="mb-5 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-medium text-ink-mute dark:text-ink-dark-mute sm:text-sm"
           >
             <span className="relative flex h-2 w-2 shrink-0" aria-hidden>
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent-soft opacity-75" />
@@ -129,20 +143,24 @@ export default function Hero() {
 
           {/* Nom — révélé lettre par lettre (effet bascule 3D). Le texte complet
               "Mampionona Rakotovao" reste une chaîne continue (pas de <br/>),
-              le retour à la ligne se fait naturellement sur les écrans étroits. */}
+              le retour à la ligne se fait naturellement sur les écrans étroits.
+              `colorShift.to` suit le thème actif (voir `nameEndColor` ci-dessus) :
+              c'est ce qui manquait pour que le nom reste lisible en mode clair.
+              `text-ink dark:text-ink-dark` sert de filet de sécurité pour l'état
+              statique (reduced-motion, avant/après l'animation). */}
           <AnimatedText
             as="h1"
             text="Mampionona Rakotovao"
             stagger={0.025}
             flip3D
-            colorShift={{ from: '#14b8a6', to: '#e7ece9' }}
-            className="mt-4 text-balance text-4xl font-black leading-[1.05] tracking-tight text-ink-dark sm:text-5xl lg:text-[3.75rem]"
+            colorShift={{ from: '#14b8a6', to: nameEndColor }}
+            className="mt-4 text-balance text-4xl font-black leading-[1.05] tracking-tight text-ink dark:text-ink-dark sm:text-5xl lg:text-[3.75rem]"
           />
 
           {/* Sous-titre — chevron fixe + rôles défilants (effet compteur à rouleaux).
               Le chevron ">" reste fixe, seul le rôle change après. */}
           <p className="mt-5 text-xl font-semibold sm:text-2xl lg:text-[1.65rem]">
-            <span className="text-accent-soft" aria-hidden>
+            <span className="text-accent dark:text-accent-soft" aria-hidden>
               &gt;{' '}
             </span>
             <RotatingText words={roles} interval={2500} />
@@ -150,7 +168,7 @@ export default function Hero() {
 
           <motion.p
             variants={item}
-            className="mt-6 max-w-lg text-sm leading-relaxed text-ink-dark-mute sm:text-base"
+            className="mt-6 max-w-lg text-sm leading-relaxed text-ink-mute dark:text-ink-dark-mute sm:text-base"
           >
             {profile.tagline}
           </motion.p>
@@ -174,7 +192,7 @@ export default function Hero() {
             </button>
             <a
               href="#contact"
-              className="inline-flex items-center justify-center gap-2 rounded-full border border-white/25 px-6 py-3 text-sm font-semibold text-ink-dark transition-colors duration-300 hover:border-white/50 hover:bg-white/5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-soft"
+              className="inline-flex items-center justify-center gap-2 rounded-full border border-ink/15 px-6 py-3 text-sm font-semibold text-ink transition-colors duration-300 hover:border-ink/30 hover:bg-ink/5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-soft dark:border-white/25 dark:text-ink-dark dark:hover:border-white/50 dark:hover:bg-white/5"
             >
               <FiMail aria-hidden className="text-base" />
               Me contacter
@@ -183,17 +201,17 @@ export default function Hero() {
 
           <motion.div
             variants={item}
-            className="mt-8 flex flex-col gap-2 text-sm text-ink-dark-mute sm:flex-row sm:flex-wrap sm:gap-x-6 sm:gap-y-2"
+            className="mt-8 flex flex-col gap-2 text-sm text-ink-mute dark:text-ink-dark-mute sm:flex-row sm:flex-wrap sm:gap-x-6 sm:gap-y-2"
           >
             <span className="inline-flex items-center gap-2">
-              <FiMapPin aria-hidden className="shrink-0 text-accent-soft" />
+              <FiMapPin aria-hidden className="shrink-0 text-accent dark:text-accent-soft" />
               {profile.location}
             </span>
             <a
               href={`tel:${profile.phone.replace(/\s/g, '')}`}
-              className="inline-flex items-center gap-2 transition-colors hover:text-accent-soft focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-soft"
+              className="inline-flex items-center gap-2 transition-colors hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-soft dark:hover:text-accent-soft"
             >
-              <FiPhone aria-hidden className="shrink-0 text-accent-soft" />
+              <FiPhone aria-hidden className="shrink-0 text-accent dark:text-accent-soft" />
               {profile.phone}
             </a>
           </motion.div>
@@ -207,7 +225,7 @@ export default function Hero() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.1, duration: 0.6 }}
-        className="absolute bottom-6 left-1/2 flex h-10 w-10 -translate-x-1/2 items-center justify-center rounded-full border border-white/20 text-accent-soft focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-soft"
+        className="absolute bottom-6 left-1/2 flex h-10 w-10 -translate-x-1/2 items-center justify-center rounded-full border border-ink/15 text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-soft dark:border-white/20 dark:text-accent-soft"
       >
         <motion.span
           animate={{ y: [0, 6, 0] }}
