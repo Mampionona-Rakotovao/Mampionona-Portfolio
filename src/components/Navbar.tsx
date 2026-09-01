@@ -176,13 +176,13 @@ export default function Navbar() {
           })}
         </ul>
 
-        {/* Theme toggle (desktop) */}
+        {/* Theme toggle (desktop only — the mobile menu has its own toggle row below) */}
         <motion.button
           whileHover={reduceMotion ? undefined : { scale: 1.1 }}
           whileTap={reduceMotion ? undefined : { scale: 0.9 }}
           onClick={toggleTheme}
           aria-label={nextThemeLabel}
-          className={`grid h-10 w-10 shrink-0 place-items-center rounded-full border transition-colors duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${
+          className={`hidden h-10 w-10 shrink-0 place-items-center rounded-full border transition-colors duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent md:grid ${
             onHero
               ? 'border-white/20 text-ink-dark hover:bg-white/10'
               : 'border-line text-ink hover:bg-black/5 dark:border-line-dark dark:text-ink-dark dark:hover:bg-white/5'
