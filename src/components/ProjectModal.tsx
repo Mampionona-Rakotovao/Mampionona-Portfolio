@@ -88,13 +88,13 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
           ease: [0.16, 1, 0.3, 1],
         }}
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-3xl overflow-hidden rounded-2xl border border-line-dark bg-hero-dark shadow-2xl"
+        className="relative w-full max-w-3xl overflow-hidden rounded-2xl border border-line bg-surface-2 shadow-2xl dark:border-line-dark dark:bg-hero-dark"
       >
         {/* Close */}
         <button
           onClick={onClose}
           aria-label="Fermer"
-          className="absolute right-3 top-3 z-20 grid h-9 w-9 place-items-center rounded-full bg-black/50 text-white/80 backdrop-blur-sm transition-colors hover:bg-black/70 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:right-4 sm:top-4"
+          className="absolute right-3 top-3 z-20 grid h-9 w-9 place-items-center rounded-full bg-black/50 text-white/80 backdrop-blur-sm transition-colors hover:bg-black/70 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:right-4 sm:top-4 dark:bg-white/10 dark:text-ink dark:hover:bg-white/20 dark:focus-visible:outline-gold"
         >
           <FiX size={18} aria-hidden />
         </button>
@@ -169,27 +169,27 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
         {/* Content */}
         <div className="space-y-4 p-5 sm:p-6">
           <div>
-            <span className="inline-block rounded-full bg-white/10 px-3 py-1 text-xs font-bold uppercase tracking-wide text-white/70">
+            <span className="inline-block rounded-full bg-black/5 px-3 py-1 text-xs font-bold uppercase tracking-wide text-ink/70 dark:bg-white/10 dark:text-white/70">
               {project.category}
             </span>
-            <h3 className="mt-3 text-lg font-bold text-white sm:text-xl">
+            <h3 className="mt-3 text-lg font-bold text-ink dark:text-white sm:text-xl">
               {project.title}
             </h3>
-            <p className="mt-1 text-sm text-white/60">
+            <p className="mt-1 text-sm text-ink-mute dark:text-white/60">
               {project.period} · {project.place}
             </p>
           </div>
-          <p className="text-sm font-medium text-accent-soft">{project.subtitle}</p>
-          <p className="text-sm leading-relaxed text-white/60">{project.description}</p>
+          <p className="text-sm font-medium text-accent dark:text-accent-soft">{project.subtitle}</p>
+          <p className="text-sm leading-relaxed text-ink-mute dark:text-white/60">{project.description}</p>
           <div>
-            <h4 className="mb-2 text-xs font-bold uppercase tracking-widest text-accent-soft">
+            <h4 className="mb-2 text-xs font-bold uppercase tracking-widest text-accent dark:text-accent-soft">
               Technologies
             </h4>
             <div className="flex flex-wrap gap-2">
               {project.tech.map((t) => (
                 <span
                   key={t}
-                  className="rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-white/80"
+                  className="rounded-full bg-black/5 px-3 py-1 text-xs font-semibold text-ink/80 dark:bg-white/10 dark:text-white/80"
                 >
                   {t}
                 </span>
