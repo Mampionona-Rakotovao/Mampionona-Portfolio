@@ -8,13 +8,13 @@ import RotatingText from '../components/RotatingText'
 import { roles } from '../data/roles'
 
 /**
- * Hero — photo container now starts at 28% from the left (was 20%, briefly
- * 0%, originally 38%). `object-cover` has to scale the image up more, the
- * wider its container is relative to the section — narrowing it back a bit
- * from 20% to 28% is what actually "zooms out": it needs less crop to cover
- * the box, showing more shoulders/headroom around the face. Panning
- * (`object-position`) only shifts the crop, it can't change how zoomed-in it
- * is — the container width is the real zoom lever here.
+ * Hero — photo container now starts at 40% from the left (was 34%, then 28%,
+ * 20%, briefly 0%, originally 38%). Narrower container = less `object-cover`
+ * zoom needed to fill it — that's the real zoom lever, `object-position` only
+ * pans the crop. 40% is now slightly wider than the original 38%, giving a
+ * relaxed, natural framing close to the source photo (full jacket, collar,
+ * shoulders visible) while still reading a touch more present than the very
+ * first version.
  */
 
 // Variants pour l'apparition en cascade du bloc texte
@@ -72,17 +72,17 @@ export default function Hero() {
           <motion.div
             animate={{ opacity: [0.15, 0.3, 0.15] }}
             transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
-            className="absolute right-[10%] top-1/2 hidden h-[65%] w-[28%] -translate-y-1/2 rounded-full bg-accent-soft/15 blur-3xl lg:block"
+            className="absolute right-[10%] top-1/2 hidden h-[62%] w-[24%] -translate-y-1/2 rounded-full bg-accent-soft/15 blur-3xl lg:block"
           />
         )}
 
-        {/* Photo — démarre à 28% de la largeur (était 20%) : légèrement
-            dézoomée, plus d'espace visible autour du visage et sur les épaules. */}
+        {/* Photo — démarre à 40% de la largeur (était 34%) : cadrage relâché,
+            proche du cadrage naturel de la photo d'origine. */}
         <motion.div
           initial={{ opacity: 0, scale: 1.05 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1.2, ease: 'easeOut' }}
-          className="absolute inset-0 lg:left-[28%]"
+          className="absolute inset-0 lg:left-[40%]"
         >
           {/* Flottement très léger façon respiration (desktop, gated par reduced-motion) */}
           <motion.div
@@ -99,7 +99,7 @@ export default function Hero() {
               alt=""
               whileHover={isDesktop ? { scale: 1.04 } : undefined}
               transition={{ duration: 0.6, ease: 'easeOut' }}
-              className="h-full w-full object-cover object-[center_15%] sm:object-[center_20%] lg:object-[62%_13%]"
+              className="h-full w-full object-cover object-[center_15%] sm:object-[center_20%] lg:object-[58%_8%]"
             />
           </motion.div>
 
@@ -110,10 +110,9 @@ export default function Hero() {
               transparent au centre pour que la photo reste nette. */}
           <div className="absolute inset-0 bg-gradient-to-b from-surface/75 from-0% via-surface/8 via-32% via-surface/8 via-62% to-surface/75 to-100% dark:from-hero-dark/75 dark:from-0% dark:via-hero-dark/10 dark:via-32% dark:via-hero-dark/10 dark:via-62% dark:to-hero-dark/75 dark:to-100% lg:hidden" />
 
-          {/* Fondu horizontal (desktop) : opaque seulement derrière la zone de
-              texte, puis transparent — recalibré pour le nouveau conteneur
-              (28%→100%, donc 72% de large). */}
-          <div className="absolute inset-0 hidden bg-gradient-to-r from-surface from-0% via-surface/55 via-18% to-transparent to-38% dark:from-hero-dark dark:via-hero-dark/65 dark:via-18% dark:to-transparent dark:to-38% lg:block" />
+          {/* Fondu horizontal (desktop) : recalibré pour le nouveau conteneur
+              (40%→100%, donc 60% de large — proche des proportions d'origine). */}
+          <div className="absolute inset-0 hidden bg-gradient-to-r from-surface from-0% via-surface/55 via-22% to-transparent to-46% dark:from-hero-dark dark:via-hero-dark/65 dark:via-22% dark:to-transparent dark:to-46% lg:block" />
         </motion.div>
       </div>
 
