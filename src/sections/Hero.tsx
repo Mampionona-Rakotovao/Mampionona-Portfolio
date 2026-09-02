@@ -3,15 +3,18 @@ import { motion, useReducedMotion } from 'framer-motion'
 import { FiDownload, FiMail, FiMapPin, FiPhone, FiArrowDown } from 'react-icons/fi'
 import { profile } from '../data/profile'
 import { useDownloadCV } from '../hooks/useDownloadCV'
-import { useTheme } from '../hooks/useTheme'
 import AnimatedText from '../components/AnimatedText'
 import RotatingText from '../components/RotatingText'
 import { roles } from '../data/roles'
 
 /**
- * Hero — split-screen layout with portrait photo and gradient blend.
- * Follows the site's light/dark theme (see `useTheme`), including the
- * gradient that blends the photo into the page background.
+ * Hero — photo container now starts at 28% from the left (was 20%, briefly
+ * 0%, originally 38%). `object-cover` has to scale the image up more, the
+ * wider its container is relative to the section — narrowing it back a bit
+ * from 20% to 28% is what actually "zooms out": it needs less crop to cover
+ * the box, showing more shoulders/headroom around the face. Panning
+ * (`object-position`) only shifts the crop, it can't change how zoomed-in it
+ * is — the container width is the real zoom lever here.
  */
 
 // Variants pour l'apparition en cascade du bloc texte
@@ -50,15 +53,8 @@ function useIsDesktop() {
 
 export default function Hero() {
   const { download, downloading } = useDownloadCV()
-  const { theme } = useTheme()
   const reduceMotion = useReducedMotion()
   const isDesktop = useIsDesktop()
-
-  // The name's letter-reveal animates its own colour via `colorShift`, so it
-  // must target the token that matches the *current* theme — a hardcoded hex
-  // here would make the name invisible whenever the theme doesn't match it
-  // (this was the root cause of the near-invisible name in light mode).
-  const nameEndColor = theme === 'dark' ? '#e7ece9' /* ink-dark */ : '#1f2428' /* ink */
 
   return (
     <section
@@ -68,22 +64,25 @@ export default function Hero() {
     >
       {/* Portrait + gradient blend */}
       <div className="pointer-events-none absolute inset-0" aria-hidden>
-        {/* Halo lumineux discret qui pulse derrière la photo (desktop) —
-            désactivé si prefers-reduced-motion */}
+        {/* Halo lumineux discret qui pulse derrière la photo (desktop) — reste
+            dans la zone où la photo est déjà pleinement visible, opacité basse
+            pour ne jamais transparaître en forme ronde. Désactivé si
+            prefers-reduced-motion. */}
         {!reduceMotion && (
           <motion.div
-            animate={{ opacity: [0.35, 0.6, 0.35] }}
+            animate={{ opacity: [0.15, 0.3, 0.15] }}
             transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
-            className="absolute right-[6%] top-1/2 hidden h-[75%] w-[42%] -translate-y-1/2 rounded-full bg-accent-soft/25 blur-3xl lg:block"
+            className="absolute right-[10%] top-1/2 hidden h-[65%] w-[28%] -translate-y-1/2 rounded-full bg-accent-soft/15 blur-3xl lg:block"
           />
         )}
 
-        {/* Photo — fondu d'entrée une seule fois, puis flottement continu (desktop) */}
+        {/* Photo — démarre à 28% de la largeur (était 20%) : légèrement
+            dézoomée, plus d'espace visible autour du visage et sur les épaules. */}
         <motion.div
           initial={{ opacity: 0, scale: 1.05 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1.2, ease: 'easeOut' }}
-          className="absolute inset-0 lg:left-[38%]"
+          className="absolute inset-0 lg:left-[28%]"
         >
           {/* Flottement très léger façon respiration (desktop, gated par reduced-motion) */}
           <motion.div
@@ -100,22 +99,21 @@ export default function Hero() {
               alt=""
               whileHover={isDesktop ? { scale: 1.04 } : undefined}
               transition={{ duration: 0.6, ease: 'easeOut' }}
-              className="h-full w-full object-cover object-[center_15%] sm:object-[center_20%] lg:object-[62%_15%]"
+              className="h-full w-full object-cover object-[center_15%] sm:object-[center_20%] lg:object-[62%_13%]"
             />
           </motion.div>
 
-          {/* Overlay uniforme pour garder le texte lisible — un peu plus léger en
-              clair (le fond derrière est déjà clair, pas besoin d'assombrir autant). */}
-          <div className="absolute inset-0 bg-black/10 dark:bg-black/25" />
+          {/* Overlay uniforme très léger pour garder le texte lisible */}
+          <div className="absolute inset-0 bg-black/8 dark:bg-black/20" />
 
-          {/* Fondu vertical (mobile/tablette) : image en fond de section.
-              Les deux jeux de couleurs (clair par défaut, sombre via `dark:`)
-              coexistent sur le même calque. */}
-          <div className="absolute inset-0 bg-gradient-to-b from-surface/60 via-surface/85 to-surface dark:from-hero-dark/55 dark:via-hero-dark/80 dark:to-hero-dark lg:hidden" />
+          {/* Fondu vertical (mobile/tablette) : contraste localisé, quasi
+              transparent au centre pour que la photo reste nette. */}
+          <div className="absolute inset-0 bg-gradient-to-b from-surface/75 from-0% via-surface/8 via-32% via-surface/8 via-62% to-surface/75 to-100% dark:from-hero-dark/75 dark:from-0% dark:via-hero-dark/10 dark:via-32% dark:via-hero-dark/10 dark:via-62% dark:to-hero-dark/75 dark:to-100% lg:hidden" />
 
-          {/* Fondu horizontal (desktop) : dégradé progressif du fond de page vers
-              la photo, sans bande nette — suit le thème actif. */}
-          <div className="absolute inset-0 hidden bg-gradient-to-r from-surface from-0% via-surface/70 via-25% to-transparent to-60% dark:from-hero-dark dark:via-hero-dark/70 dark:to-transparent lg:block" />
+          {/* Fondu horizontal (desktop) : opaque seulement derrière la zone de
+              texte, puis transparent — recalibré pour le nouveau conteneur
+              (28%→100%, donc 72% de large). */}
+          <div className="absolute inset-0 hidden bg-gradient-to-r from-surface from-0% via-surface/55 via-18% to-transparent to-38% dark:from-hero-dark dark:via-hero-dark/65 dark:via-18% dark:to-transparent dark:to-38% lg:block" />
         </motion.div>
       </div>
 
@@ -141,19 +139,15 @@ export default function Hero() {
             <span className="w-full sm:w-auto">{profile.school}</span>
           </motion.p>
 
-          {/* Nom — révélé lettre par lettre (effet bascule 3D). Le texte complet
-              "Mampionona Rakotovao" reste une chaîne continue (pas de <br/>),
-              le retour à la ligne se fait naturellement sur les écrans étroits.
-              `colorShift.to` suit le thème actif (voir `nameEndColor` ci-dessus) :
-              c'est ce qui manquait pour que le nom reste lisible en mode clair.
-              `text-ink dark:text-ink-dark` sert de filet de sécurité pour l'état
-              statique (reduced-motion, avant/après l'animation). */}
+          {/* Nom — révélé lettre par lettre (effet bascule 3D + vague de couleur
+              décorative). La couleur réelle vient uniquement de `className`
+              (`text-ink dark:text-ink-dark`), jamais du JS. */}
           <AnimatedText
             as="h1"
             text="Mampionona Rakotovao"
             stagger={0.025}
             flip3D
-            colorShift={{ from: '#14b8a6', to: nameEndColor }}
+            waveColor="#14b8a6"
             className="mt-4 text-balance text-4xl font-black leading-[1.05] tracking-tight text-ink dark:text-ink-dark sm:text-5xl lg:text-[3.75rem]"
           />
 

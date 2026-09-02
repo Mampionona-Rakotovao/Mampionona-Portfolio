@@ -13,16 +13,17 @@ interface AnimatedTextProps {
   /** Adds a subtle 3D flip (rotateX) to each letter. Default false. */
   flip3D?: boolean
   /**
-   * Animate each letter's colour from `from` to `to` while it appears,
-   * creating a colour "wave" along the word. The letters end on `to`.
+   * Optional accent colour for a brief "wave" that washes over each letter as
+   * it appears. The real letter's resting colour always comes from
+   * `className` (e.g. `text-ink dark:text-ink-dark`) — it is never set via
+   * JS/Framer — so it's instantly correct for the active theme and can never
+   * get "stuck" on a stale value after a theme toggle. The wave is a
+   * decorative, identically-shaped copy of the letter, in `waveColor`,
+   * absolutely positioned on top, that simply fades out.
    */
-  colorShift?: { from: string; to: string }
+  waveColor?: string
 }
 
-/**
- * Pre-declared motion components (created outside render to avoid resetting
- * state / react(static-components) warnings) mapped from the `as` tag.
- */
 const MOTION_TAGS: Record<NonNullable<AnimatedTextProps['as']>, ComponentType<any>> = {
   h1: motion.h1,
   h2: motion.h2,
@@ -44,6 +45,16 @@ const MOTION_TAGS: Record<NonNullable<AnimatedTextProps['as']>, ComponentType<an
  * when their slot is reached in the global stagger cascade (badge → name →
  * subtitle → …). Words are preserved (spaces kept as non-breaking) and text
  * wraps naturally with `text-balance`; we never break words.
+ *
+ * Colour handling (previous bug): an earlier version animated the letter's
+ * *real* colour via Framer (`variants.show.color`) while also trying to force
+ * it via a reactive `style` prop for theme changes. Framer directly writes
+ * animated properties to the DOM outside of React's render cycle, so it kept
+ * winning that fight — the name stayed stuck on whatever colour was computed
+ * at the very first mount, regardless of theme. Now the real letter never has
+ * its colour touched by JS at all; it just inherits `currentColor` from
+ * `className`. The colour "wave" effect is purely decorative, via a
+ * fading overlay copy — see `waveColor`.
  */
 export default function AnimatedText({
   as = 'span',
@@ -51,7 +62,7 @@ export default function AnimatedText({
   className = '',
   stagger = 0.025,
   flip3D = false,
-  colorShift,
+  waveColor,
 }: AnimatedTextProps) {
   const reduceMotion = useReducedMotion()
 
@@ -67,21 +78,28 @@ export default function AnimatedText({
     show: { transition: { staggerChildren: stagger } },
   }
 
+  // Real letter: opacity/position only, never colour.
   const letter: Variants = {
     hidden: {
       opacity: 0,
       y: flip3D ? 20 : 12,
       ...(flip3D ? { rotateX: -40 } : {}),
-      // Start on the accent colour so it "washes in" towards the final colour.
-      ...(colorShift ? { color: colorShift.from } : {}),
     },
     show: {
       opacity: 1,
       y: 0,
       rotateX: 0,
-      // Through-keyframes: accent → final, in sync with the existing movement.
-      ...(colorShift ? { color: [colorShift.from, colorShift.to] } : {}),
       transition: { duration: flip3D ? 0.6 : 0.5, ease: 'easeOut' },
+    },
+  }
+
+  // Decorative wave overlay: starts fully opaque in `waveColor`, fades out
+  // just after the real letter has appeared.
+  const wave: Variants = {
+    hidden: { opacity: 1 },
+    show: {
+      opacity: 0,
+      transition: { duration: 0.45, ease: 'easeOut', delay: 0.05 },
     },
   }
 
@@ -96,14 +114,29 @@ export default function AnimatedText({
         {text.split(' ').map((word, i) => (
           <span key={i} className="inline-block whitespace-nowrap">
             {word.split('').map((char, j) => (
-              <motion.span
+              <span
                 key={j}
-                variants={letter}
-                className="inline-block"
-                style={{ transformStyle: 'preserve-3d' }}
+                className="relative inline-block"
+                style={flip3D ? { transformStyle: 'preserve-3d' } : undefined}
               >
-                {char}
-              </motion.span>
+                {/* Real letter — colour comes purely from the inherited className. */}
+                <motion.span variants={letter} className="inline-block">
+                  {char}
+                </motion.span>
+
+                {/* Decorative colour wave — never the source of truth for the
+                    resting colour, purely a fading overlay. */}
+                {waveColor && (
+                  <motion.span
+                    variants={wave}
+                    aria-hidden
+                    className="pointer-events-none absolute inset-0 inline-block"
+                    style={{ color: waveColor }}
+                  >
+                    {char}
+                  </motion.span>
+                )}
+              </span>
             ))}
             {i < text.split(' ').length - 1 ? '\u00A0' : null}
           </span>

@@ -86,13 +86,21 @@ export default function Navbar() {
   }
 
   const onHero = active === 'accueil' && !scrolled
+  const isDark = theme === 'dark'
 
-  const linkColorClass = (isActive: boolean) =>
-    isActive
-      ? 'font-semibold text-gold'
-      : onHero
+  const linkColorClass = (isActive: boolean) => {
+    if (isActive) return 'font-semibold text-gold'
+    if (onHero) {
+      return isDark
         ? 'text-ink-dark-mute hover:text-ink-dark'
-        : 'text-ink-mute hover:text-ink dark:text-ink-dark-mute dark:hover:text-ink-dark'
+        : 'text-ink-mute hover:text-ink'
+    }
+    return 'text-ink-mute hover:text-ink dark:text-ink-dark-mute dark:hover:text-ink-dark'
+  }
+
+  const heroPrimaryText = isDark ? 'text-ink-dark' : 'text-ink'
+  const heroBorder = isDark ? 'border-white/20' : 'border-ink/20'
+  const heroHoverBg = isDark ? 'hover:bg-white/10' : 'hover:bg-ink/5'
 
   return (
     <header
@@ -115,7 +123,9 @@ export default function Navbar() {
           whileTap={reduceMotion ? undefined : { scale: 0.97 }}
           aria-label="Retour à l'accueil"
           className={`rounded-full text-base font-extrabold tracking-tight transition-colors duration-300 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent sm:text-lg ${
-            onHero ? 'text-ink-dark hover:text-accent-soft' : 'text-ink hover:text-accent-soft dark:text-ink-dark'
+            onHero
+              ? `${heroPrimaryText} hover:text-accent`
+              : 'text-ink hover:text-accent dark:text-ink-dark dark:hover:text-accent-soft'
           }`}
         >
           Mampionona.R
@@ -184,7 +194,7 @@ export default function Navbar() {
           aria-label={nextThemeLabel}
           className={`hidden h-10 w-10 shrink-0 place-items-center rounded-full border transition-colors duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent md:grid ${
             onHero
-              ? 'border-white/20 text-ink-dark hover:bg-white/10'
+              ? `${heroBorder} ${heroPrimaryText} ${heroHoverBg}`
               : 'border-line text-ink hover:bg-black/5 dark:border-line-dark dark:text-ink-dark dark:hover:bg-white/5'
           }`}
         >
@@ -213,7 +223,9 @@ export default function Navbar() {
           aria-label="Télécharger mon curriculum vitae"
           className={`hidden items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-colors duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:cursor-wait md:inline-flex ${
             onHero
-              ? 'bg-white/10 text-ink-dark hover:bg-white/20'
+              ? isDark
+                ? 'bg-white/10 text-ink-dark hover:bg-white/20'
+                : 'bg-ink/8 text-ink hover:bg-ink/12'
               : 'bg-accent/10 text-accent hover:bg-accent/20 dark:bg-accent/10 dark:text-accent-soft dark:hover:bg-accent/20'
           }`}
         >
@@ -229,7 +241,7 @@ export default function Navbar() {
           aria-controls="mobile-nav"
           className={`grid h-10 w-10 place-items-center rounded-full border transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent md:hidden ${
             onHero
-              ? 'border-white/20 text-ink-dark'
+              ? `${heroBorder} ${heroPrimaryText}`
               : 'border-line text-ink dark:border-line-dark dark:text-ink-dark'
           }`}
         >
@@ -264,7 +276,9 @@ export default function Navbar() {
             transition={{ duration: 0.3, ease: 'easeInOut' }}
             className={`overflow-hidden border-t md:hidden ${
               onHero
-                ? 'border-ink/10 bg-surface dark:border-white/10 dark:bg-hero-dark'
+                ? isDark
+                  ? 'border-white/10 bg-hero-dark'
+                  : 'border-ink/10 bg-surface'
                 : 'border-line bg-surface dark:border-line-dark dark:bg-surface-dark'
             }`}
           >
@@ -285,7 +299,9 @@ export default function Navbar() {
                         isActive
                           ? 'font-semibold text-gold'
                           : onHero
-                            ? 'text-ink-dark-mute'
+                            ? isDark
+                              ? 'text-ink-dark-mute hover:text-ink-dark'
+                              : 'text-ink-mute hover:text-ink'
                             : 'text-ink-mute dark:text-ink-dark-mute'
                       }`}
                     >
@@ -300,7 +316,9 @@ export default function Navbar() {
                   disabled={downloading}
                   className={`flex w-full items-center gap-2 rounded-lg px-4 py-2.5 text-left text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold disabled:cursor-wait ${
                     onHero
-                      ? 'text-ink-dark-mute hover:text-ink-dark'
+                      ? isDark
+                        ? 'text-ink-dark-mute hover:text-ink-dark'
+                        : 'text-ink-mute hover:text-ink'
                       : 'text-accent hover:bg-accent/10 dark:text-accent-soft dark:hover:bg-accent/10'
                   }`}
                 >
@@ -314,7 +332,9 @@ export default function Navbar() {
                   aria-label={nextThemeLabel}
                   className={`flex w-full items-center gap-2 rounded-lg px-4 py-2.5 text-left text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold ${
                     onHero
-                      ? 'text-ink-dark-mute hover:text-ink-dark'
+                      ? isDark
+                        ? 'text-ink-dark-mute hover:text-ink-dark'
+                        : 'text-ink-mute hover:text-ink'
                       : 'text-ink-mute hover:text-ink dark:text-ink-dark-mute dark:hover:text-ink-dark'
                   }`}
                 >
