@@ -8,6 +8,8 @@ interface SectionProps {
   subtitle?: ReactNode
   children: ReactNode
   className?: string
+  /** Optional full-bleed decorative background rendered behind the content. */
+  background?: ReactNode
 }
 
 const container = {
@@ -27,9 +29,14 @@ const item = {
  * Shared section wrapper providing consistent spacing, an animated heading
  * and scroll-reveal + stagger for its children.
  */
-export default function Section({ id, label, title, subtitle, children, className = '' }: SectionProps) {
+export default function Section({ id, label, title, subtitle, children, className = '', background }: SectionProps) {
   return (
-    <section id={id} aria-labelledby={`${id}-title`} className={`py-24 sm:py-32 ${className}`}>
+    <section
+      id={id}
+      aria-labelledby={`${id}-title`}
+      className={`relative overflow-hidden py-24 sm:py-32 ${className}`}
+    >
+      {background}
       <motion.div
         variants={container}
         initial="hidden"

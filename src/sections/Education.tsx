@@ -3,6 +3,7 @@ import { motion, useScroll, useTransform } from 'framer-motion'
 import type { EducationItem } from '../data/types'
 import { education } from '../data/education'
 import Section from '../components/Section'
+import NetworkBackground from '../components/NetworkBackground'
 
 const itemVariants = {
   hidden: { opacity: 0, y: 24 },
@@ -31,6 +32,7 @@ export default function Education() {
       label="Formation"
       title="Diplômes"
       subtitle="Mon parcours académique à l’École Nationale d’Informatique de Fianarantsoa."
+      background={<NetworkBackground tone="accent" density="corner-bottom-left" />}
     >
       <div ref={ref} className="relative mx-auto max-w-2xl">
         <div

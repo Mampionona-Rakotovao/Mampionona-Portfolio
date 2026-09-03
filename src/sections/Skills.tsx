@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import Section from '../components/Section'
+import NetworkBackground from '../components/NetworkBackground'
 import { skillCategories } from '../data/skills'
 
 const gridContainer = {
@@ -42,6 +43,7 @@ export default function Skills() {
       title="Compétences techniques"
       subtitle="Langages, frameworks, bases de données et outils que j’utilise pour concevoir des applications web et mobiles."
       className="bg-surface-2 dark:bg-surface-dark-2"
+      background={<NetworkBackground tone="gold" density="even" />}
     >
       <motion.div
         variants={gridContainer}

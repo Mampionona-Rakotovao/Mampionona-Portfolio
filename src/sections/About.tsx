@@ -2,6 +2,7 @@ import { motion } from 'framer-motion'
 import { FiCompass, FiCheck } from 'react-icons/fi'
 import Section from '../components/Section'
 import ProfileSidebar from '../components/ProfileSidebar'
+import NetworkBackground from '../components/NetworkBackground'
 import { profile } from '../data/profile'
 
 const bioReveal = {
@@ -23,6 +24,13 @@ export default function About() {
       label="À propos"
       title="Profil"
       subtitle="Étudiant en informatique passionné par le développement logiciel et les technologies web."
+      background={
+        <NetworkBackground
+          tone="accent"
+          density="corner-top-right"
+          className="opacity-80"
+        />
+      }
     >
       <div className="grid items-start gap-10 lg:grid-cols-[minmax(280px,340px)_1fr]">
         <ProfileSidebar />

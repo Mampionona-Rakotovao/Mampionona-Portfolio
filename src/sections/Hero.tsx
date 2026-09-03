@@ -106,9 +106,11 @@ export default function Hero() {
           {/* Overlay uniforme très léger pour garder le texte lisible */}
           <div className="absolute inset-0 bg-black/8 dark:bg-black/20" />
 
-          {/* Fondu vertical (mobile/tablette) : contraste localisé, quasi
-              transparent au centre pour que la photo reste nette. */}
-          <div className="absolute inset-0 bg-gradient-to-b from-surface/75 from-0% via-surface/8 via-32% via-surface/8 via-62% to-surface/75 to-100% dark:from-hero-dark/75 dark:from-0% dark:via-hero-dark/10 dark:via-32% dark:via-hero-dark/10 dark:via-62% dark:to-hero-dark/75 dark:to-100% lg:hidden" />
+          {/* Fondu vertical (mobile/tablette) : le texte occupe presque toute
+              la hauteur, donc aucune bande n'est "vide". On garde une voile
+              légère mais suffisante partout pour préserver la lisibilité au
+              lieu d'une zone quasi transparente qui traverserait les blocs. */}
+          <div className="absolute inset-0 bg-gradient-to-b from-surface/80 from-0% via-surface/35 via-40% via-surface/40 via-55% to-surface/85 to-100% dark:from-hero-dark/85 dark:from-0% dark:via-hero-dark/40 dark:via-40% dark:via-hero-dark/45 dark:via-55% dark:to-hero-dark/90 dark:to-100% lg:hidden" />
 
           {/* Fondu horizontal (desktop) : recalibré pour le nouveau conteneur
               (40%→100%, donc 60% de large — proche des proportions d'origine). */}

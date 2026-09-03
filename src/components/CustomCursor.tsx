@@ -16,9 +16,18 @@ export default function CustomCursor() {
   const springY = useSpring(y, { stiffness: 900, damping: 60, mass: 0.4 })
 
   useEffect(() => {
-    const fine = window.matchMedia('(pointer: fine)').matches
-    if (!fine) return
-    setEnabled(true)
+    // Only track a real fine/pointer (mouse) cursor. On any touch or coarse
+    // device (phones, tablets, touch laptops) we disable entirely so no
+    // ghost/stuck dot is left behind in the DOM.
+    const fine = window.matchMedia('(pointer: fine)')
+    const hover = window.matchMedia('(hover: hover)')
+    const coarse = window.matchMedia('(pointer: coarse)')
+
+    const apply = () => {
+      // Require a genuine mouse AND no touch in use.
+      setEnabled(fine.matches && hover.matches && !coarse.matches)
+    }
+    apply()
 
     const move = (e: MouseEvent) => {
       x.set(e.clientX)
@@ -28,12 +37,24 @@ export default function CustomCursor() {
       const t = e.target as HTMLElement
       setHovering(!!t.closest('a, button, [data-tilt]'))
     }
+    const onTouch = () => {
+      // A touch interaction at any time turns the custom cursor off to avoid
+      // leaving a frozen circle behind after tap/scroll.
+      setEnabled(false)
+    }
 
     window.addEventListener('mousemove', move)
     window.addEventListener('mouseover', over)
+    window.addEventListener('touchstart', onTouch, { passive: true })
+
+    const mqls = [fine, hover, coarse]
+    mqls.forEach((m) => m.addEventListener('change', apply))
+
     return () => {
       window.removeEventListener('mousemove', move)
       window.removeEventListener('mouseover', over)
+      window.removeEventListener('touchstart', onTouch)
+      mqls.forEach((m) => m.removeEventListener('change', apply))
     }
   }, [x, y])
 

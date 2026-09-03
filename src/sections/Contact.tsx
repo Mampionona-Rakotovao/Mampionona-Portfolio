@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { FiSend, FiCheck, FiMail, FiPhone, FiMapPin } from 'react-icons/fi'
 import emailjs from '@emailjs/browser'
 import Section from '../components/Section'
+import NetworkBackground from '../components/NetworkBackground'
 import { profile, socials } from '../data/profile'
 
 const EMAILJS_PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY as string
@@ -83,6 +84,7 @@ export default function Contact() {
       label="Contact"
       title="Travaillons ensemble"
       subtitle="Une question, un projet ou une opportunité de stage ? N’hésitez pas à me contacter."
+      background={<NetworkBackground tone="accent" density="corner-bottom-left" />}
     >
       <div className="grid items-start gap-10 lg:grid-cols-[minmax(280px,340px)_1fr]">
         <motion.div

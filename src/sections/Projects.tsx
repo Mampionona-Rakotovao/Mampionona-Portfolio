@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi'
 import Section from '../components/Section'
+import NetworkBackground from '../components/NetworkBackground'
 import ProjectCard from '../components/ProjectCard'
 import ProjectModal from '../components/ProjectModal'
 import { projects } from '../data/experiences'
@@ -36,6 +37,7 @@ export default function Projects() {
       title="Mes projets et expériences"
       subtitle="Des projets concrets réalisés pendant mes études et un stage, allant du mobile au full-stack web."
       className="bg-surface-2 dark:bg-surface-dark-2"
+      background={<NetworkBackground tone="gold" density="corner-top-right" />}
     >
       {/* Cards grid */}
       <AnimatePresence mode="wait">
