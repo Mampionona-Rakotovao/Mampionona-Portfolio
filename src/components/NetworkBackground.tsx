@@ -109,7 +109,7 @@ export default function NetworkBackground({
     return { nodes: generated, links: linksFor }
   }, [count, density, nodeCount, vbH])
 
-  const lineCls = tone === 'gold' ? 'text-gold-soft/30 dark:text-gold-soft/55' : 'text-accent/30 dark:text-accent-soft/55'
+  const lineCls = tone === 'gold' ? 'text-gold-soft/50 dark:text-gold-soft/55' : 'text-accent/55 dark:text-accent-soft/55'
 
   return (
     <div
