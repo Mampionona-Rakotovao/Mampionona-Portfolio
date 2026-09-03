@@ -1,4 +1,4 @@
-import { useMemo, useEffect, useState } from 'react'
+import { useMemo, useEffect, useState, useRef } from 'react'
 
 type Tone = 'accent' | 'gold'
 type Density = 'corner-top-right' | 'corner-bottom-left' | 'even'
@@ -47,8 +47,27 @@ export default function NetworkBackground({
   className = '',
 }: NetworkBackgroundProps) {
   const isDesktop = useIsDesktop()
+  const ref = useRef<HTMLDivElement>(null)
+  const [ratio, setRatio] = useState(1) // conteneur width/height
 
-  const count = isDesktop ? nodeCount : Math.max(12, Math.round(nodeCount * 0.55))
+  // Track the container's aspect ratio so the network keeps natural
+  // proportions (untwisted) whether the section is wide (desktop) or tall
+  // (mobile portrait), instead of being violently compressed by
+  // preserveAspectRatio="none".
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const update = () => setRatio(Math.max(0.1, el.clientWidth / Math.max(1, el.clientHeight)))
+    update()
+    const ro = new ResizeObserver(update)
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [])
+
+  // Fewer, larger-spaced nodes on small/tall screens so the mesh stays airy.
+  const count = isDesktop ? nodeCount : Math.max(10, Math.round(nodeCount * 0.42))
+
+  const vbH = Math.min(100, Math.round((100 / ratio) * 10) / 10)
 
   const { nodes, links } = useMemo(() => {
     // Seeded PRNG so the layout is stable across renders/reloads of a given
@@ -71,7 +90,7 @@ export default function NetworkBackground({
 
     const generated: Node[] = Array.from({ length: count }, (_, i) => {
       const [x, y] = bias[density](rand(), rand())
-      return { id: i, x: x * 100, y: y * 100 }
+      return { id: i, x: x * 100, y: y * vbH }
     })
 
     // Connect each node to its 2-4 nearest neighbours (distance heuristic).
@@ -88,16 +107,21 @@ export default function NetworkBackground({
     }
 
     return { nodes: generated, links: linksFor }
-  }, [count, density, nodeCount])
+  }, [count, density, nodeCount, vbH])
 
-  const lineCls = tone === 'gold' ? 'text-gold-soft/15 dark:text-gold-soft/25' : 'text-accent/10 dark:text-accent-soft/20'
+  const lineCls = tone === 'gold' ? 'text-gold-soft/30 dark:text-gold-soft/55' : 'text-accent/30 dark:text-accent-soft/55'
 
   return (
     <div
+      ref={ref}
       aria-hidden="true"
       className={`pointer-events-none absolute inset-0 overflow-hidden ${className}`}
     >
-      <svg className="h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+      <svg
+        className="h-full w-full"
+        viewBox={`0 0 100 ${vbH}`}
+        preserveAspectRatio="xMidYMid meet"
+      >
         {/* Links */}
         <g className={lineCls}>
           {links.map(([a, b]) => (
@@ -108,7 +132,9 @@ export default function NetworkBackground({
               x2={nodes[b].x}
               y2={nodes[b].y}
               stroke="currentColor"
-              strokeWidth="0.25"
+              strokeWidth="1"
+              strokeLinecap="round"
+              vectorEffect="non-scaling-stroke"
             />
           ))}
         </g>

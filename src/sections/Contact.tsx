@@ -245,7 +245,7 @@ export default function Contact() {
                   >
                     <FiCheck aria-hidden className="text-sm" />
                   </motion.span>
-                  Message prêt !
+                  Message envoyé !
                 </motion.span>
               )}
             </AnimatePresence>
