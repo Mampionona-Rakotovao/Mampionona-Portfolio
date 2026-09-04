@@ -1,5 +1,5 @@
 import type { SocialLink } from './types'
-import { SiGithub, SiGmail, SiFacebook } from 'react-icons/si'
+import { SiGithub, SiGmail, SiFacebook, SiWhatsapp } from 'react-icons/si'
 
 /** Central identity / profile data reused across sections. */
 export const profile = {
@@ -13,7 +13,7 @@ export const profile = {
   birthDate: '21/01/2006',
   nationality: 'Malgache',
   email: 'mampiononarakotovao06@gmail.com',
-  phone: '+261 32 95 398 03',
+  phone: '+261 34 05 576 36',
   tagline:
     'Développeur curieux et rigoureux, passionné de technologies web, mobile et de bases de données.',
   roles: [
@@ -36,5 +36,6 @@ export const profile = {
 export const socials: SocialLink[] = [
   { label: 'GitHub', url: 'https://github.com/Mampionona-Rakotovao', icon: SiGithub },
   { label: 'Facebook', url: 'https://www.facebook.com/rzfdmampionona.rakotovao/', icon: SiFacebook },
+  { label: 'WhatsApp', url: 'https://wa.me/261340557636?text=Bonjour%20Mampionona%2C%20je%20vous%20contacte%20depuis%20votre%20portfolio.', icon: SiWhatsapp },
   { label: 'Gmail', url: `mailto:${profile.email}`, icon: SiGmail },
 ]
