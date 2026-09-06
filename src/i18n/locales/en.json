@@ -1,0 +1,115 @@
+{
+  "meta": {
+    "title": "Mampionona Rakotovao — Web & Mobile Developer",
+    "description": "Portfolio of Razafindraimindra Mampionona Rakotovao — 3rd-year Computer Science student, web & mobile developer."
+  },
+  "nav": {
+    "aria": "Main navigation",
+    "backHome": "Back to home",
+    "home": "Home",
+    "about": "About",
+    "skills": "Skills",
+    "education": "Education",
+    "projects": "Projects",
+    "contact": "Contact"
+  },
+  "hero": {
+    "label": "Introduction",
+    "downloadCV": "Download CV",
+    "preparing": "Preparing…",
+    "contactMe": "Contact me",
+    "scrollDown": "Scroll to the next section",
+    "downloadAria": "Download my resume in PDF format"
+  },
+  "about": {
+    "label": "About",
+    "title": "Profile",
+    "subtitle": "Computer science student passionate about software development and web technologies.",
+    "statL3": "Computer Science Degree",
+    "statProjects": "Projects completed",
+    "statFullstack": "Web & Mobile",
+    "searchTitle": "What I'm looking for",
+    "searchText": "I'm looking for internships, freelance projects, and work-study opportunities to put my web and mobile development skills into practice, and learn from experienced teams.",
+    "point1": "Core stack: JavaScript / TypeScript, React, Node.js",
+    "point2": "Immediately available for an internship",
+    "point3": "Open source and hands-on projects",
+    "point4": "Drawn to full-stack web & mobile"
+  },
+  "skills": {
+    "label": "Skills",
+    "title": "Technical Skills",
+    "subtitle": "Languages, frameworks, databases, and tools I use to build web and mobile applications."
+  },
+  "education": {
+    "label": "Education",
+    "title": "Degrees",
+    "subtitle": "My academic journey at the École Nationale d'Informatique de Fianarantsoa."
+  },
+  "projects": {
+    "label": "Projects & Experience",
+    "title": "My projects & experience",
+    "subtitle": "Hands-on projects completed during my studies and an internship, ranging from mobile to full-stack web.",
+    "prevPage": "Previous page",
+    "nextPage": "Next page",
+    "goToPage": "Go to page {{page}}"
+  },
+  "contact": {
+    "label": "Contact",
+    "title": "Let's work together",
+    "subtitle": "A question, a project, or an internship opportunity? Feel free to reach out.",
+    "intro": "I'm open to internship opportunities and collaborative projects. Prefer a direct conversation? Here are my contact details and social links.",
+    "phone": "Phone",
+    "location": "Location",
+    "namePlaceholder": "Your name",
+    "emailPlaceholder": "Your email",
+    "messagePlaceholder": "Your message",
+    "send": "Send",
+    "sending": "Sending…",
+    "sent": "Message sent!",
+    "errorAlert": "Failed to send message. Please try again."
+  },
+  "footer": {
+    "backToTop": "Back to top ↑"
+  },
+  "sidebar": {
+    "languages": "Languages",
+    "strengths": "Strengths",
+    "interests": "Interests"
+  },
+  "modal": {
+    "close": "Close",
+    "technologies": "Technologies",
+    "screenshot": "Screenshot",
+    "prevImage": "Previous image",
+    "nextImage": "Next image",
+    "goToImage": "Go to image {{index}}"
+  },
+  "card": {
+    "viewProject": "View project details",
+    "screenshotOf": "Screenshot —"
+  },
+  "skillBar": {
+    "level": "Skill level: {{name}} at {{level}}%"
+  },
+  "menu": {
+    "open": "Open menu",
+    "close": "Close menu"
+  },
+  "theme": {
+    "toLight": "Switch to light mode",
+    "toDark": "Switch to dark mode",
+    "lightMode": "Light mode",
+    "darkMode": "Dark mode"
+  },
+  "cv": {
+    "download": "Download CV",
+    "downloading": "Downloading…",
+    "downloadAria": "Download my resume",
+    "errorFetch": "Could not download the CV ({{status}}).",
+    "errorGeneric": "The CV download failed."
+  },
+  "lang": {
+    "switchToEn": "Switch to English",
+    "switchToFr": "Switch to French"
+  }
+}

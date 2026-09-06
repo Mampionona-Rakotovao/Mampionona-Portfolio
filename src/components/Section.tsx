@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import { motion } from 'framer-motion'
+import FadeText from './FadeText'
 
 interface SectionProps {
   id: string
@@ -45,16 +46,18 @@ export default function Section({ id, label, title, subtitle, children, classNam
         className="mx-auto max-w-6xl px-6 sm:px-10"
       >
         <motion.div variants={item} className="mb-14 max-w-2xl">
-          <span className="text-sm font-bold uppercase tracking-widest text-accent">{label}</span>
+          <span className="text-sm font-bold uppercase tracking-widest text-accent">
+            <FadeText>{label}</FadeText>
+          </span>
           <h2
             id={`${id}-title`}
             className="mt-2 text-2xl font-extrabold tracking-tight text-ink dark:text-ink-dark sm:text-3xl"
           >
-            {title}
+            <FadeText>{title}</FadeText>
           </h2>
           {subtitle && (
             <div className="mt-3 text-base leading-relaxed text-ink-mute dark:text-ink-dark-mute">
-              {subtitle}
+              <FadeText>{subtitle}</FadeText>
             </div>
           )}
           <span className="mt-4 block h-1 w-16 rounded-full bg-gradient-to-r from-accent to-gold" />

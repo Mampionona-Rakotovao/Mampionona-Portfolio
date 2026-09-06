@@ -1,0 +1,115 @@
+{
+  "meta": {
+    "title": "Mampionona Rakotovao — Développeur Web & Mobile",
+    "description": "Portfolio de Razafindraimindra Mampionona Rakotovao — Étudiant en Licence 3 Informatique, développeur web & mobile."
+  },
+  "nav": {
+    "aria": "Navigation principale",
+    "backHome": "Retour à l'accueil",
+    "home": "Accueil",
+    "about": "À propos",
+    "skills": "Compétences",
+    "education": "Formation",
+    "projects": "Projets",
+    "contact": "Contact"
+  },
+  "hero": {
+    "label": "Présentation",
+    "downloadCV": "Télécharger CV",
+    "preparing": "Préparation…",
+    "contactMe": "Me contacter",
+    "scrollDown": "Défiler vers la section suivante",
+    "downloadAria": "Télécharger mon curriculum vitae au format PDF"
+  },
+  "about": {
+    "label": "À propos",
+    "title": "Profil",
+    "subtitle": "Étudiant en informatique passionné par le développement logiciel et les technologies web.",
+    "statL3": "Licence Informatique",
+    "statProjects": "Projets réalisés",
+    "statFullstack": "Web & Mobile",
+    "searchTitle": "Ce que je recherche",
+    "searchText": "Je suis à la recherche de stages, de projets freelance et d'opportunités en alternance pour mettre en pratique mes compétences en développement web et mobile, et apprendre auprès d'équipes expérimentées.",
+    "point1": "Stack principale : JavaScript / TypeScript, React, Node.js",
+    "point2": "Disponible immédiatement pour un stage",
+    "point3": "Open source et projets concrets",
+    "point4": "Attiré par le full-stack web & mobile"
+  },
+  "skills": {
+    "label": "Compétences",
+    "title": "Compétences techniques",
+    "subtitle": "Langages, frameworks, bases de données et outils que j'utilise pour concevoir des applications web et mobiles."
+  },
+  "education": {
+    "label": "Formation",
+    "title": "Diplômes",
+    "subtitle": "Mon parcours académique à l'École Nationale d'Informatique de Fianarantsoa."
+  },
+  "projects": {
+    "label": "Projets & Expériences",
+    "title": "Mes projets et expériences",
+    "subtitle": "Des projets concrets réalisés pendant mes études et un stage, allant du mobile au full-stack web.",
+    "prevPage": "Page précédente",
+    "nextPage": "Page suivante",
+    "goToPage": "Aller à la page {{page}}"
+  },
+  "contact": {
+    "label": "Contact",
+    "title": "Travaillons ensemble",
+    "subtitle": "Une question, un projet ou une opportunité de stage ? N'hésitez pas à me contacter.",
+    "intro": "Je suis ouvert aux opportunités de stage et aux projets collaboratifs. Préférez-vous un échange direct ? Voici mes coordonnées et mes réseaux.",
+    "phone": "Téléphone",
+    "location": "Localisation",
+    "namePlaceholder": "Votre nom",
+    "emailPlaceholder": "Votre email",
+    "messagePlaceholder": "Votre message",
+    "send": "Envoyer",
+    "sending": "Envoi en cours…",
+    "sent": "Message envoyé !",
+    "errorAlert": "Erreur lors de l'envoi. Veuillez réessayer."
+  },
+  "footer": {
+    "backToTop": "Retour en haut ↑"
+  },
+  "sidebar": {
+    "languages": "Langues",
+    "strengths": "Atouts",
+    "interests": "Centres d'intérêt"
+  },
+  "modal": {
+    "close": "Fermer",
+    "technologies": "Technologies",
+    "screenshot": "Capture d'écran",
+    "prevImage": "Image précédente",
+    "nextImage": "Image suivante",
+    "goToImage": "Aller à l'image {{index}}"
+  },
+  "card": {
+    "viewProject": "Voir le détail du projet",
+    "screenshotOf": "Capture d'écran —"
+  },
+  "skillBar": {
+    "level": "Niveau de compétence : {{name}} à {{level}}%"
+  },
+  "menu": {
+    "open": "Ouvrir le menu",
+    "close": "Fermer le menu"
+  },
+  "theme": {
+    "toLight": "Passer en mode clair",
+    "toDark": "Passer en mode sombre",
+    "lightMode": "Mode clair",
+    "darkMode": "Mode sombre"
+  },
+  "cv": {
+    "download": "Télécharger CV",
+    "downloading": "Téléchargement…",
+    "downloadAria": "Télécharger mon curriculum vitae",
+    "errorFetch": "Impossible de télécharger le CV ({{status}}).",
+    "errorGeneric": "Le téléchargement du CV a échoué."
+  },
+  "lang": {
+    "switchToEn": "Passer en anglais",
+    "switchToFr": "Passer en français"
+  }
+}

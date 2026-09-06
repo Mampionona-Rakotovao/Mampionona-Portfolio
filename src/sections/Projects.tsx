@@ -1,28 +1,31 @@
 import { useState, useMemo } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi'
+import { useTranslation } from 'react-i18next'
+import { useLang } from '../hooks/useLang'
 import Section from '../components/Section'
 import NetworkBackground from '../components/NetworkBackground'
 import ProjectCard from '../components/ProjectCard'
 import ProjectModal from '../components/ProjectModal'
 import { projects } from '../data/experiences'
-import type { Project } from '../data/types'
+import { projectsEn } from '../data/experiences.en'
 
 const PROJECTS_PER_PAGE = 3
 
-/**
- * Projects/Experiences — paginated grid with a detail modal.
- */
 export default function Projects() {
-  const [selected, setSelected] = useState<Project | null>(null)
+  const { t } = useTranslation()
+  const { lang } = useLang()
+  const [selectedId, setSelectedId] = useState<string | null>(null)
   const [page, setPage] = useState(1)
 
-  const totalPages = Math.max(1, Math.ceil(projects.length / PROJECTS_PER_PAGE))
+  const allProjects = lang === 'en' ? projectsEn : projects
+  const selected = allProjects.find((p) => p.id === selectedId) ?? null
+  const totalPages = Math.max(1, Math.ceil(allProjects.length / PROJECTS_PER_PAGE))
 
   const paginatedProjects = useMemo(() => {
     const start = (page - 1) * PROJECTS_PER_PAGE
-    return projects.slice(start, start + PROJECTS_PER_PAGE)
-  }, [page])
+    return allProjects.slice(start, start + PROJECTS_PER_PAGE)
+  }, [page, allProjects])
 
   const goToPage = (newPage: number) => {
     if (newPage < 1 || newPage > totalPages) return
@@ -33,9 +36,9 @@ export default function Projects() {
   return (
     <Section
       id="projets"
-      label="Projets & Expériences"
-      title="Mes projets et expériences"
-      subtitle="Des projets concrets réalisés pendant mes études et un stage, allant du mobile au full-stack web."
+      label={t('projects.label')}
+      title={t('projects.title')}
+      subtitle={t('projects.subtitle')}
       className="bg-surface-2 dark:bg-surface-dark-2"
       background={<NetworkBackground tone="gold" density="corner-top-right" />}
     >
@@ -55,7 +58,7 @@ export default function Projects() {
               variants={{ hidden: { opacity: 0, y: 24 }, visible: { opacity: 1, y: 0 } }}
               transition={{ duration: 0.3 }}
             >
-              <ProjectCard project={project} onOpen={setSelected} />
+              <ProjectCard project={project} onOpen={(p) => setSelectedId(p.id)} />
             </motion.div>
           ))}
         </motion.div>
@@ -68,7 +71,7 @@ export default function Projects() {
             onClick={() => goToPage(page - 1)}
             disabled={page === 1}
             className="flex h-10 w-10 items-center justify-center rounded-full border border-line transition hover:bg-surface-2 disabled:cursor-not-allowed disabled:opacity-40 dark:border-line-dark dark:hover:bg-surface-dark-2"
-            aria-label="Page précédente"
+            aria-label={t('projects.prevPage')}
           >
             <FiChevronLeft className="h-4 w-4" />
           </button>
@@ -82,7 +85,7 @@ export default function Projects() {
                   ? 'bg-accent text-white'
                   : 'border border-line hover:bg-surface-2 dark:border-line-dark dark:hover:bg-surface-dark-2'
               }`}
-              aria-label={`Aller à la page ${p}`}
+              aria-label={t('projects.goToPage', { page: p })}
               aria-current={p === page ? 'page' : undefined}
             >
               {p}
@@ -93,7 +96,7 @@ export default function Projects() {
             onClick={() => goToPage(page + 1)}
             disabled={page === totalPages}
             className="flex h-10 w-10 items-center justify-center rounded-full border border-line transition hover:bg-surface-2 disabled:cursor-not-allowed disabled:opacity-40 dark:border-line-dark dark:hover:bg-surface-dark-2"
-            aria-label="Page suivante"
+            aria-label={t('projects.nextPage')}
           >
             <FiChevronRight className="h-4 w-4" />
           </button>
@@ -103,7 +106,7 @@ export default function Projects() {
       {/* Detail modal */}
       <AnimatePresence>
         {selected && (
-          <ProjectModal project={selected} onClose={() => setSelected(null)} />
+          <ProjectModal project={selected} onClose={() => setSelectedId(null)} />
         )}
       </AnimatePresence>
     </Section>

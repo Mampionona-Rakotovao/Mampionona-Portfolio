@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react'
 import { profile } from '../data/profile'
+import i18n from '../i18n'
 
 /**
  * Robust CV download.
@@ -18,7 +19,7 @@ export function useDownloadCV() {
     setError(null)
     try {
       const res = await fetch(profile.resumeUrl)
-      if (!res.ok) throw new Error(`Impossible de télécharger le CV (${res.status}).`)
+      if (!res.ok) throw new Error(i18n.t('cv.errorFetch', { status: res.status }))
       const blob = await res.blob()
       const url = URL.createObjectURL(blob)
       const a = document.createElement('a')
@@ -29,7 +30,7 @@ export function useDownloadCV() {
       a.remove()
       URL.revokeObjectURL(url)
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Le téléchargement du CV a échoué.')
+      setError(err instanceof Error ? err.message : i18n.t('cv.errorGeneric'))
     } finally {
       setDownloading(false)
     }

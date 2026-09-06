@@ -1,7 +1,10 @@
 import { useRef } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
+import { useTranslation } from 'react-i18next'
+import { useLang } from '../hooks/useLang'
 import type { EducationItem } from '../data/types'
 import { education } from '../data/education'
+import { educationEn } from '../data/education.en'
 import Section from '../components/Section'
 import NetworkBackground from '../components/NetworkBackground'
 
@@ -14,10 +17,9 @@ const itemVariants = {
   }),
 }
 
-/**
- * Vertical timeline — line draws on scroll, entries slide in sequentially.
- */
 export default function Education() {
+  const { t } = useTranslation()
+  const { lang } = useLang()
   const ref = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -25,13 +27,14 @@ export default function Education() {
   })
 
   const lineScale = useTransform(scrollYProgress, [0, 1], [0, 1])
+  const items = lang === 'en' ? educationEn : education
 
   return (
     <Section
       id="formation"
-      label="Formation"
-      title="Diplômes"
-      subtitle="Mon parcours académique à l’École Nationale d’Informatique de Fianarantsoa."
+      label={t('education.label')}
+      title={t('education.title')}
+      subtitle={t('education.subtitle')}
       background={<NetworkBackground tone="accent" density="corner-bottom-left" />}
     >
       <div ref={ref} className="relative mx-auto max-w-2xl">
@@ -46,7 +49,7 @@ export default function Education() {
         />
 
         <ol className="space-y-8">
-          {education.map((item: EducationItem, i) => (
+          {items.map((item: EducationItem, i) => (
             <motion.li
               key={item.title}
               custom={i}

@@ -28,7 +28,7 @@ export const profile = {
   ],
   interests: ['Lecture', 'Football', 'Basket-ball'],
   about: `Étudiant en troisième année de Licence en Informatique à l'École Nationale d'Informatique de Fianarantsoa, passionné par le développement logiciel, les technologies web et les bases de données. Curieux, rigoureux et doté d'un bon esprit d'équipe, je souhaite contribuer à des projets innovants tout en développant mes compétences techniques.`,
-  resumeUrl: '/CV.pdf',
+  resumeUrl: '/CV-Mampionona-Rakotova-Full-Stack.pdf',
   resumeFilename: 'CV_Razafindraimindra_Mampionona_Rakotovao.pdf',
 } as const
 

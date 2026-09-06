@@ -1,6 +1,10 @@
 import { motion } from 'framer-motion'
+import { useTranslation } from 'react-i18next'
+import { useLang } from '../hooks/useLang'
 import { profile } from '../data/profile'
+import { profileEn } from '../data/profile.en'
 import { softSkills } from '../data/skills'
+import { softSkillsEn } from '../data/skills.en'
 
 const sidebarContainer = {
   hidden: {},
@@ -29,10 +33,12 @@ interface ProfileSidebarProps {
   className?: string
 }
 
-/**
- * CV-style sidebar — languages, strengths and interests.
- */
 export default function ProfileSidebar({ className = '' }: ProfileSidebarProps) {
+  const { t } = useTranslation()
+  const { lang } = useLang()
+  const p = lang === 'en' ? profileEn : profile
+  const skills = lang === 'en' ? softSkillsEn : softSkills
+
   return (
     <motion.aside
       variants={sidebarContainer}
@@ -42,9 +48,9 @@ export default function ProfileSidebar({ className = '' }: ProfileSidebarProps) 
       className={`space-y-8 rounded-2xl border border-line bg-surface-2/80 p-6 shadow-card backdrop-blur-sm dark:border-line-dark dark:bg-surface-dark-2/80 lg:sticky lg:top-28 lg:self-start ${className}`}
     >
       <motion.div variants={sidebarItem}>
-        <h3 className="mb-3 text-xs font-bold uppercase tracking-widest text-accent">Langues</h3>
+        <h3 className="mb-3 text-xs font-bold uppercase tracking-widest text-accent">{t('sidebar.languages')}</h3>
         <ul className="space-y-2">
-          {profile.languages.map((lang, i) => (
+          {p.languages.map((lang, i) => (
             <motion.li
               key={lang.name}
               custom={i}
@@ -62,9 +68,9 @@ export default function ProfileSidebar({ className = '' }: ProfileSidebarProps) 
       </motion.div>
 
       <motion.div variants={sidebarItem}>
-        <h3 className="mb-3 text-xs font-bold uppercase tracking-widest text-accent">Atouts</h3>
+        <h3 className="mb-3 text-xs font-bold uppercase tracking-widest text-accent">{t('sidebar.strengths')}</h3>
         <div className="flex flex-wrap gap-2">
-          {softSkills.map((s, i) => {
+          {skills.map((s, i) => {
             const Icon = s.icon
             return (
               <motion.span
@@ -87,10 +93,10 @@ export default function ProfileSidebar({ className = '' }: ProfileSidebarProps) 
 
       <motion.div variants={sidebarItem}>
         <h3 className="mb-3 text-xs font-bold uppercase tracking-widest text-accent">
-          Centres d&apos;intérêt
+          {t('sidebar.interests')}
         </h3>
         <div className="flex flex-wrap gap-2">
-          {profile.interests.map((interest, i) => (
+          {p.interests.map((interest, i) => (
             <motion.span
               key={interest}
               custom={i}

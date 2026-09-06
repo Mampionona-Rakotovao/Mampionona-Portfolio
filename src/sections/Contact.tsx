@@ -2,9 +2,13 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { FiSend, FiCheck, FiMail, FiPhone, FiMapPin } from 'react-icons/fi'
 import emailjs from '@emailjs/browser'
+import { useTranslation } from 'react-i18next'
+import { useLang } from '../hooks/useLang'
 import Section from '../components/Section'
+import FadeText from '../components/FadeText'
 import NetworkBackground from '../components/NetworkBackground'
 import { profile, socials } from '../data/profile'
+import { profileEn, socialsEn } from '../data/profile.en'
 
 const EMAILJS_PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY as string
 const EMAILJS_SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID as string
@@ -24,30 +28,32 @@ const leftItem = {
   },
 }
 
-const contactRows = [
-  {
-    icon: FiMail,
-    label: 'Email',
-    value: profile.email,
-    href: `mailto:${profile.email}`,
-  },
-  {
-    icon: FiPhone,
-    label: 'Téléphone',
-    value: profile.phone,
-    href: `tel:${profile.phone.replace(/\s/g, '')}`,
-  },
-  { icon: FiMapPin, label: 'Localisation', value: profile.location },
-] as const
-
 type Status = 'idle' | 'sending' | 'sent'
 
-/**
- * Contact — real contact details, social links and EmailJS-powered form.
- */
 export default function Contact() {
+  const { t } = useTranslation()
+  const { lang } = useLang()
   const [form, setForm] = useState({ name: '', email: '', message: '' })
   const [status, setStatus] = useState<Status>('idle')
+
+  const p = lang === 'en' ? profileEn : profile
+  const s = lang === 'en' ? socialsEn : socials
+
+  const contactRows = [
+    {
+      icon: FiMail,
+      label: 'Email',
+      value: p.email,
+      href: `mailto:${p.email}`,
+    },
+    {
+      icon: FiPhone,
+      label: t('contact.phone'),
+      value: p.phone,
+      href: `tel:${p.phone.replace(/\s/g, '')}`,
+    },
+    { icon: FiMapPin, label: t('contact.location'), value: p.location },
+  ] as const
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -67,10 +73,10 @@ export default function Contact() {
       const e = err as { status?: number; text?: string; message?: string }
       console.error('EmailJS error:', e.status, e.text || e.message)
       alert(
-        "Erreur lors de l'envoi. Veuillez réessayer.\n\n" +
+        t('contact.errorAlert') +
           (e.text
-            ? `Détail (${e.status}): ${e.text}`
-            : 'Vérifiez que votre compte EmailJS est actif et le service Gmail connecté.'),
+            ? `\n\nDetail (${e.status}): ${e.text}`
+            : '\n\nCheck that your EmailJS account is active and the Gmail service is connected.'),
       )
     }
   }
@@ -81,9 +87,9 @@ export default function Contact() {
   return (
     <Section
       id="contact"
-      label="Contact"
-      title="Travaillons ensemble"
-      subtitle="Une question, un projet ou une opportunité de stage ? N’hésitez pas à me contacter."
+      label={t('contact.label')}
+      title={t('contact.title')}
+      subtitle={t('contact.subtitle')}
       background={<NetworkBackground tone="accent" density="corner-bottom-left" />}
     >
       <div className="grid items-start gap-10 lg:grid-cols-[minmax(280px,340px)_1fr]">
@@ -98,8 +104,7 @@ export default function Contact() {
             variants={leftItem}
             className="text-base leading-relaxed text-ink-mute dark:text-ink-dark-mute"
           >
-            Je suis ouvert aux opportunités de stage et aux projets collaboratifs. Préférez-vous un
-            échange direct ? Voici mes coordonnées et mes réseaux.
+            <FadeText>{t('contact.intro')}</FadeText>
           </motion.p>
 
           <motion.ul variants={leftContainer} className="space-y-4">
@@ -138,15 +143,15 @@ export default function Contact() {
           </motion.ul>
 
           <motion.div variants={leftContainer} className="flex gap-3">
-            {socials.map((s) => {
-              const Icon = s.icon
+            {s.map((social) => {
+              const Icon = social.icon
               return (
                 <motion.a
-                  key={s.label}
-                  href={s.url}
+                  key={social.label}
+                  href={social.url}
                   target="_blank"
                   rel="noreferrer"
-                  aria-label={s.label}
+                  aria-label={social.label}
                   variants={leftItem}
                   whileHover={{ scale: 1.1, rotate: 5 }}
                   transition={{ duration: 0.2 }}
@@ -171,30 +176,30 @@ export default function Contact() {
             <input
               type="text"
               required
-              placeholder="Votre nom"
+              placeholder={t('contact.namePlaceholder')}
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
               className={inputClass}
-              aria-label="Votre nom"
+              aria-label={t('contact.namePlaceholder')}
             />
             <input
               type="email"
               required
-              placeholder="Votre email"
+              placeholder={t('contact.emailPlaceholder')}
               value={form.email}
               onChange={(e) => setForm({ ...form, email: e.target.value })}
               className={inputClass}
-              aria-label="Votre email"
+              aria-label={t('contact.emailPlaceholder')}
             />
           </div>
           <textarea
             required
             rows={6}
-            placeholder="Votre message"
+            placeholder={t('contact.messagePlaceholder')}
             value={form.message}
             onChange={(e) => setForm({ ...form, message: e.target.value })}
             className={inputClass}
-            aria-label="Votre message"
+            aria-label={t('contact.messagePlaceholder')}
           />
           <motion.button
             type="submit"
@@ -213,7 +218,7 @@ export default function Contact() {
                   transition={{ duration: 0.2 }}
                   className="inline-flex items-center gap-2"
                 >
-                  <FiSend aria-hidden /> Envoyer
+                  <FiSend aria-hidden /> {t('contact.send')}
                 </motion.span>
               )}
               {status === 'sending' && (
@@ -225,7 +230,7 @@ export default function Contact() {
                   transition={{ duration: 0.2 }}
                   className="inline-flex items-center gap-2"
                 >
-                  Envoi en cours…
+                  {t('contact.sending')}
                 </motion.span>
               )}
               {status === 'sent' && (
@@ -245,7 +250,7 @@ export default function Contact() {
                   >
                     <FiCheck aria-hidden className="text-sm" />
                   </motion.span>
-                  Message envoyé !
+                  {t('contact.sent')}
                 </motion.span>
               )}
             </AnimatePresence>

@@ -1,5 +1,6 @@
 import { useEffect, useCallback, useState } from 'react'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
+import { useTranslation } from 'react-i18next'
 import { FiX, FiChevronLeft, FiChevronRight } from 'react-icons/fi'
 import type { Project } from '../data/types'
 
@@ -13,6 +14,7 @@ interface ProjectModalProps {
  * Replaces both the old accordion detail and the separate Lightbox.
  */
 export default function ProjectModal({ project, onClose }: ProjectModalProps) {
+  const { t } = useTranslation()
   const images = project.images ?? []
   const hasImages = images.length > 0
   const hasMultiple = images.length > 1
@@ -64,8 +66,8 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
   }
 
   const imageLabel = hasMultiple
-    ? `Capture d'écran ${photoIndex + 1} / ${images.length} — ${project.title}`
-    : `Capture d'écran — ${project.title}`
+    ? `${t('modal.screenshot')} ${photoIndex + 1} / ${images.length} — ${project.title}`
+    : `${t('modal.screenshot')} — ${project.title}`
 
   return (
     <motion.div
@@ -93,7 +95,7 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
         {/* Close */}
         <button
           onClick={onClose}
-          aria-label="Fermer"
+          aria-label={t('modal.close')}
           className="absolute right-3 top-3 z-20 grid h-9 w-9 place-items-center rounded-full bg-black/50 text-white/80 backdrop-blur-sm transition-colors hover:bg-black/70 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:right-4 sm:top-4 dark:bg-white/10 dark:text-ink dark:hover:bg-white/20 dark:focus-visible:outline-gold"
         >
           <FiX size={18} aria-hidden />
@@ -125,7 +127,7 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
                     e.stopPropagation()
                     goPrev()
                   }}
-                  aria-label="Image précédente"
+                  aria-label={t('modal.prevImage')}
                   className="absolute left-2 top-1/2 z-10 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-full bg-black/40 text-white/80 backdrop-blur-sm transition-colors hover:bg-black/60 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:left-3 sm:h-11 sm:w-11"
                 >
                   <FiChevronLeft size={20} aria-hidden />
@@ -135,7 +137,7 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
                     e.stopPropagation()
                     goNext()
                   }}
-                  aria-label="Image suivante"
+                  aria-label={t('modal.nextImage')}
                   className="absolute right-2 top-1/2 z-10 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-full bg-black/40 text-white/80 backdrop-blur-sm transition-colors hover:bg-black/60 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:right-3 sm:h-11 sm:w-11"
                 >
                   <FiChevronRight size={20} aria-hidden />
@@ -153,7 +155,7 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
                       e.stopPropagation()
                       navigate(i)
                     }}
-                    aria-label={`Aller à l'image ${i + 1}`}
+                    aria-label={t('modal.goToImage', { index: i + 1 })}
                     className={`h-2 rounded-full transition-all duration-200 ${
                       i === photoIndex
                         ? 'w-5 bg-white'
@@ -183,15 +185,15 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
           <p className="text-sm leading-relaxed text-ink-mute dark:text-white/60">{project.description}</p>
           <div>
             <h4 className="mb-2 text-xs font-bold uppercase tracking-widest text-accent dark:text-accent-soft">
-              Technologies
+              {t('modal.technologies')}
             </h4>
             <div className="flex flex-wrap gap-2">
-              {project.tech.map((t) => (
+              {project.tech.map((tech) => (
                 <span
-                  key={t}
+                  key={tech}
                   className="rounded-full bg-black/5 px-3 py-1 text-xs font-semibold text-ink/80 dark:bg-white/10 dark:text-white/80"
                 >
-                  {t}
+                  {tech}
                 </span>
               ))}
             </div>
@@ -200,4 +202,4 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
       </motion.div>
     </motion.div>
   )
-}   
+}

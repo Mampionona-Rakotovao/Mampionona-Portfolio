@@ -1,17 +1,13 @@
 import { useEffect, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { FiDownload, FiMoon, FiSun } from 'react-icons/fi'
+import { useTranslation } from 'react-i18next'
+import { useLang } from '../hooks/useLang'
 import { useDownloadCV } from '../hooks/useDownloadCV'
 import { useTheme } from '../hooks/useTheme'
 
-const LINKS = [
-  { id: 'accueil', label: 'Accueil' },
-  { id: 'a-propos', label: 'À propos' },
-  { id: 'competences', label: 'Compétences' },
-  { id: 'formation', label: 'Formation' },
-  { id: 'projets', label: 'Projets' },
-  { id: 'contact', label: 'Contact' },
-]
+const LINK_IDS = ['accueil', 'a-propos', 'competences', 'formation', 'projets', 'contact'] as const
+const LINK_KEYS = ['nav.home', 'nav.about', 'nav.skills', 'nav.education', 'nav.projects', 'nav.contact'] as const
 
 const menuContainer = {
   hidden: {},
@@ -23,31 +19,25 @@ const menuItem = {
   show: { opacity: 1, y: 0, transition: { duration: 0.3, ease: 'easeOut' as const } },
 }
 
-/**
- * Fixed top navigation with scroll-spy highlighting, a sliding orange active
- * underline (Framer `layoutId`), hover micro-interactions and an animated
- * mobile menu.
- *
- * `useReducedMotion` disables the sliding underline, hover/tap transforms and
- * the mobile stagger — the active/hover states still update instantly via
- * colours.
- */
 export default function Navbar() {
+  const { t } = useTranslation()
+  const { lang, toggleLang } = useLang()
   const reduceMotion = useReducedMotion()
   const [active, setActive] = useState('accueil')
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
   const { download, downloading } = useDownloadCV()
   const { theme, toggleTheme } = useTheme()
-  const nextThemeLabel = theme === 'dark' ? 'Passer en mode clair' : 'Passer en mode sombre'
+  const nextThemeLabel = theme === 'dark' ? t('theme.toLight') : t('theme.toDark')
+  const nextLangLabel = lang === 'fr' ? t('lang.switchToEn') : t('lang.switchToFr')
 
   useEffect(() => {
     const onScroll = () => {
       setScrolled(window.scrollY > 40)
       let current = 'accueil'
-      for (const link of LINKS) {
-        const el = document.getElementById(link.id)
-        if (el && el.getBoundingClientRect().top <= 120) current = link.id
+      for (const id of LINK_IDS) {
+        const el = document.getElementById(id)
+        if (el && el.getBoundingClientRect().top <= 120) current = id
       }
       setActive(current)
     }
@@ -56,30 +46,15 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  /**
-   * Navigates to a section by id.
-   *
-   * Closes the mobile menu first, then waits one animation frame before
-   * scrolling — this avoids computing the scroll target while the header's
-   * height is still that of the open mobile menu (which would throw off the
-   * landing position on some mobile browsers).
-   *
-   * If the id doesn't match any element in the DOM, this logs a clear warning
-   * instead of failing silently (the previous `?.scrollIntoView(...)` masked
-   * this case entirely — a mismatched or missing section id would just do
-   * nothing, with no way to tell why).
-   */
   const go = (id: string) => {
     setOpen(false)
-
     const el = document.getElementById(id)
     if (!el) {
       console.warn(
-        `[Navbar] Aucun élément trouvé avec l'id "${id}". Vérifie que la section correspondante a bien <section id="${id}"> posé sur sa balise racine.`,
+        `[Navbar] No element found with id "${id}". Make sure the corresponding section has <section id="${id}"> on its root element.`,
       )
       return
     }
-
     requestAnimationFrame(() => {
       el.scrollIntoView({ behavior: 'smooth', block: 'start' })
     })
@@ -102,6 +77,8 @@ export default function Navbar() {
   const heroBorder = isDark ? 'border-white/20' : 'border-ink/20'
   const heroHoverBg = isDark ? 'hover:bg-white/10' : 'hover:bg-ink/5'
 
+  const links = LINK_IDS.map((id, i) => ({ id, label: t(LINK_KEYS[i]) }))
+
   return (
     <header
       className={`fixed inset-x-0 top-0 z-50 transition-[background-color,box-shadow,border-color] duration-300 ${
@@ -113,7 +90,7 @@ export default function Navbar() {
       }`}
     >
       <nav
-        aria-label="Navigation principale"
+        aria-label={t('nav.aria')}
         className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 sm:px-10 lg:px-14"
       >
         {/* Logo */}
@@ -121,7 +98,7 @@ export default function Navbar() {
           onClick={() => go('accueil')}
           whileHover={reduceMotion ? undefined : { x: 2 }}
           whileTap={reduceMotion ? undefined : { scale: 0.97 }}
-          aria-label="Retour à l'accueil"
+          aria-label={t('nav.backHome')}
           className={`rounded-full text-base font-extrabold tracking-tight transition-colors duration-300 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent sm:text-lg ${
             onHero
               ? `${heroPrimaryText} hover:text-accent`
@@ -133,7 +110,7 @@ export default function Navbar() {
 
         {/* Desktop links */}
         <ul className="relative hidden items-center gap-1 md:flex">
-          {LINKS.map((link) => {
+          {links.map((link) => {
             const isActive = active === link.id
             return (
               <li key={link.id} className="relative">
@@ -146,10 +123,7 @@ export default function Navbar() {
                   )}`}
                 >
                   <span className="relative z-10">{link.label}</span>
-
                   {isActive ? (
-                    /* Trait actif permanent — glisse d'un lien à l'autre (layoutId)
-                       et pulse doucement (désactivé en reduced-motion). */
                     <motion.span
                       aria-hidden
                       layoutId={reduceMotion ? undefined : 'nav-underline'}
@@ -164,14 +138,12 @@ export default function Navbar() {
                     />
                   ) : (
                     <>
-                      {/* Léger fond en fondu au survol */}
                       <span
                         aria-hidden
                         className={`absolute inset-0 rounded-full bg-black/5 opacity-0 transition-opacity duration-300 dark:bg-white/5 ${
                           reduceMotion ? '' : 'group-hover:opacity-100'
                         }`}
                       />
-                      {/* Petit trait animé sous le lien au survol */}
                       <span
                         aria-hidden
                         className={`absolute inset-x-4 bottom-1 h-0.5 origin-left scale-x-0 bg-gold transition-transform duration-300 motion-reduce:transition-none ${
@@ -186,7 +158,35 @@ export default function Navbar() {
           })}
         </ul>
 
-        {/* Theme toggle (desktop only — the mobile menu has its own toggle row below) */}
+        {/* Language toggle (desktop) */}
+        <motion.button
+          whileHover={reduceMotion ? undefined : { scale: 1.1 }}
+          whileTap={reduceMotion ? undefined : { scale: 0.9 }}
+          onClick={toggleLang}
+          aria-label={nextLangLabel}
+          className={`hidden h-10 w-10 shrink-0 place-items-center rounded-full border text-xs font-bold transition-colors duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent md:grid ${
+            onHero
+              ? `${heroBorder} ${heroPrimaryText} ${heroHoverBg}`
+              : 'border-line text-ink hover:bg-black/5 dark:border-line-dark dark:text-ink-dark dark:hover:bg-white/5'
+          }`}
+        >
+          <span aria-hidden className="relative flex h-5 w-5 items-center justify-center">
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.span
+                key={lang}
+                initial={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.6 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.6 }}
+                transition={{ duration: 0.2, ease: 'easeInOut' }}
+                className="absolute"
+              >
+                {lang === 'fr' ? 'FR' : 'EN'}
+              </motion.span>
+            </AnimatePresence>
+          </span>
+        </motion.button>
+
+        {/* Theme toggle (desktop) */}
         <motion.button
           whileHover={reduceMotion ? undefined : { scale: 1.1 }}
           whileTap={reduceMotion ? undefined : { scale: 0.9 }}
@@ -220,7 +220,7 @@ export default function Navbar() {
           whileTap={reduceMotion ? undefined : { scale: 0.96 }}
           onClick={download}
           disabled={downloading}
-          aria-label="Télécharger mon curriculum vitae"
+          aria-label={t('cv.downloadAria')}
           className={`hidden items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-colors duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:cursor-wait md:inline-flex ${
             onHero
               ? isDark
@@ -236,7 +236,7 @@ export default function Navbar() {
         {/* Burger (mobile) */}
         <button
           onClick={() => setOpen((o) => !o)}
-          aria-label={open ? 'Fermer le menu' : 'Ouvrir le menu'}
+          aria-label={open ? t('menu.close') : t('menu.open')}
           aria-expanded={open}
           aria-controls="mobile-nav"
           className={`grid h-10 w-10 place-items-center rounded-full border transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent md:hidden ${
@@ -288,7 +288,7 @@ export default function Navbar() {
               animate="show"
               className="space-y-1 px-6 py-4"
             >
-              {LINKS.map((link) => {
+              {links.map((link) => {
                 const isActive = active === link.id
                 return (
                   <motion.li key={link.id} variants={menuItem}>
@@ -323,7 +323,36 @@ export default function Navbar() {
                   }`}
                 >
                   <FiDownload aria-hidden className="text-base" />
-                  {downloading ? 'Téléchargement…' : 'Télécharger CV'}
+                  {downloading ? t('cv.downloading') : t('cv.download')}
+                </button>
+              </motion.li>
+              <motion.li variants={menuItem}>
+                <button
+                  onClick={toggleLang}
+                  aria-label={nextLangLabel}
+                  className={`flex w-full items-center gap-2 rounded-lg px-4 py-2.5 text-left text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold ${
+                    onHero
+                      ? isDark
+                        ? 'text-ink-dark-mute hover:text-ink-dark'
+                        : 'text-ink-mute hover:text-ink'
+                      : 'text-ink-mute hover:text-ink dark:text-ink-dark-mute dark:hover:text-ink-dark'
+                  }`}
+                >
+                  <span className="relative flex h-5 w-5 items-center justify-center">
+                    <AnimatePresence mode="wait" initial={false}>
+                      <motion.span
+                        key={lang}
+                        initial={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.6 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.6 }}
+                        transition={{ duration: 0.2, ease: 'easeInOut' }}
+                        className="text-sm font-bold"
+                      >
+                        {lang === 'fr' ? 'FR' : 'EN'}
+                      </motion.span>
+                    </AnimatePresence>
+                  </span>
+                  {nextLangLabel}
                 </button>
               </motion.li>
               <motion.li variants={menuItem}>
@@ -352,7 +381,7 @@ export default function Navbar() {
                       </motion.span>
                     </AnimatePresence>
                   </span>
-                  {theme === 'dark' ? 'Mode clair' : 'Mode sombre'}
+                  {theme === 'dark' ? t('theme.lightMode') : t('theme.darkMode')}
                 </button>
               </motion.li>
             </motion.ul>

@@ -1,7 +1,10 @@
 import { motion } from 'framer-motion'
+import { useTranslation } from 'react-i18next'
+import { useLang } from '../hooks/useLang'
 import Section from '../components/Section'
 import NetworkBackground from '../components/NetworkBackground'
 import { skillCategories } from '../data/skills'
+import { skillCategoriesEn } from '../data/skills.en'
 
 const gridContainer = {
   hidden: {},
@@ -32,16 +35,17 @@ const tagVariants = {
   },
 }
 
-/**
- * Skills — CV-style categorized tags with staggered spring animations.
- */
 export default function Skills() {
+  const { t } = useTranslation()
+  const { lang } = useLang()
+  const categories = lang === 'en' ? skillCategoriesEn : skillCategories
+
   return (
     <Section
       id="competences"
-      label="Compétences"
-      title="Compétences techniques"
-      subtitle="Langages, frameworks, bases de données et outils que j’utilise pour concevoir des applications web et mobiles."
+      label={t('skills.label')}
+      title={t('skills.title')}
+      subtitle={t('skills.subtitle')}
       className="bg-surface-2 dark:bg-surface-dark-2"
       background={<NetworkBackground tone="gold" density="even" />}
     >
@@ -52,7 +56,7 @@ export default function Skills() {
         viewport={{ once: true, margin: '-100px' }}
         className="grid gap-6 md:grid-cols-2"
       >
-        {skillCategories.map((cat) => {
+        {categories.map((cat) => {
           const Icon = cat.icon
           return (
             <motion.article

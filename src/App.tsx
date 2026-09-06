@@ -1,4 +1,5 @@
 import { MotionConfig } from 'framer-motion'
+import { LanguageProvider } from './contexts/LanguageProvider'
 import Navbar from './components/Navbar'
 import CustomCursor from './components/CustomCursor'
 import Footer from './components/Footer'
@@ -9,28 +10,22 @@ import Education from './sections/Education'
 import Projects from './sections/Projects'
 import Contact from './sections/Contact'
 
-/**
- * Root application — a single-page portfolio.
- * Sections are stacked and navigated via anchor scroll (scroll-spy).
- *
- * MotionConfig with `reducedMotion="user"` acts as a global guard: for users
- * who prefer reduced motion, Framer disables transform/layout animations
- * across every section, so reveals fall back to a simple opacity fade.
- */
 export default function App() {
   return (
-    <MotionConfig reducedMotion="user">
-      <CustomCursor />
-      <Navbar />
-      <main>
-        <Hero />
-        <About />
-        <Skills />
-        <Education />
-        <Projects />
-        <Contact />
-      </main>
-      <Footer />
-    </MotionConfig>
+    <LanguageProvider>
+      <MotionConfig reducedMotion="user">
+        <CustomCursor />
+        <Navbar />
+        <main>
+          <Hero />
+          <About />
+          <Skills />
+          <Education />
+          <Projects />
+          <Contact />
+        </main>
+        <Footer />
+      </MotionConfig>
+    </LanguageProvider>
   )
 }

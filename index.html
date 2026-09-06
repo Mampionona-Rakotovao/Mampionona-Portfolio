@@ -18,10 +18,15 @@
     <script>
       // Apply dark mode before paint to avoid flash.
       // Default is dark; system preference is never consulted.
-      const stored = localStorage.getItem('portfolio-theme')
-      if (stored !== 'light') {
+      const storedTheme = localStorage.getItem('portfolio-theme')
+      if (storedTheme !== 'light') {
         document.documentElement.classList.add('dark')
       }
+      // Apply stored language before paint; default to French, fall back to
+      // browser detection only on the very first visit.
+      const storedLang = localStorage.getItem('portfolio-lang')
+      const lang = storedLang === 'en' ? 'en' : storedLang === 'fr' ? 'fr' : navigator.language.slice(0, 2) === 'en' ? 'en' : 'fr'
+      document.documentElement.lang = lang
     </script>
   </head>
   <body>
