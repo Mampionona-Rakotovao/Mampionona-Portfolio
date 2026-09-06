@@ -9,6 +9,7 @@ import ProjectCard from '../components/ProjectCard'
 import ProjectModal from '../components/ProjectModal'
 import { projects } from '../data/experiences'
 import { projectsEn } from '../data/experiences.en'
+import { scrollToSection } from '../lib/scrollToSection'
 
 const PROJECTS_PER_PAGE = 3
 
@@ -30,7 +31,7 @@ export default function Projects() {
   const goToPage = (newPage: number) => {
     if (newPage < 1 || newPage > totalPages) return
     setPage(newPage)
-    document.getElementById('projets')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    scrollToSection('projets')
   }
 
   return (

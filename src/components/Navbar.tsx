@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { useLang } from '../hooks/useLang'
 import { useDownloadCV } from '../hooks/useDownloadCV'
 import { useTheme } from '../hooks/useTheme'
+import { scrollToSection } from '../lib/scrollToSection'
 
 const LINK_IDS = ['accueil', 'a-propos', 'competences', 'formation', 'projets', 'contact'] as const
 const LINK_KEYS = ['nav.home', 'nav.about', 'nav.skills', 'nav.education', 'nav.projects', 'nav.contact'] as const
@@ -48,16 +49,9 @@ export default function Navbar() {
 
   const go = (id: string) => {
     setOpen(false)
-    const el = document.getElementById(id)
-    if (!el) {
-      console.warn(
-        `[Navbar] No element found with id "${id}". Make sure the corresponding section has <section id="${id}"> on its root element.`,
-      )
-      return
-    }
-    requestAnimationFrame(() => {
-      el.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    })
+    // Sections below the fold are code-split: if the target is not mounted
+    // yet, scrollToSection force-mounts it and waits for it to render first.
+    scrollToSection(id)
   }
 
   const onHero = active === 'accueil' && !scrolled

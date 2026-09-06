@@ -4,6 +4,7 @@ import { FiDownload, FiMail, FiMapPin, FiPhone, FiArrowDown } from 'react-icons/
 import { useTranslation } from 'react-i18next'
 import { useLang } from '../hooks/useLang'
 import { useDownloadCV } from '../hooks/useDownloadCV'
+import { scrollToSection } from '../lib/scrollToSection'
 import AnimatedText from '../components/AnimatedText'
 import FadeText from '../components/FadeText'
 import RotatingText from '../components/RotatingText'
@@ -165,6 +166,10 @@ export default function Hero() {
             </button>
             <a
               href="#contact"
+              onClick={(e) => {
+                e.preventDefault()
+                scrollToSection('contact')
+              }}
               className="inline-flex items-center justify-center gap-2 rounded-full border border-ink/15 px-6 py-3 text-sm font-semibold text-ink transition-colors duration-300 hover:border-ink/30 hover:bg-ink/5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-soft dark:border-white/25 dark:text-ink-dark dark:hover:border-white/50 dark:hover:bg-white/5"
             >
               <FiMail aria-hidden className="text-base" />
